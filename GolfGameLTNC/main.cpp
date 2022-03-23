@@ -174,6 +174,8 @@ int main(int argc, char* args[])
 
 					//Handle input for the Ball
 					Ball.handleEvent(e);
+
+					GButton.handleEvent(e);
 				}
 
 				//Calculate time step
@@ -190,9 +192,9 @@ int main(int argc, char* args[])
 				SDL_RenderClear(gRenderer);
 
 				GButton.setPosition(Ball.getPosX(), Ball.getPosY());
-				//GButton.render();
-				// 
+				GButton.render();
 				//Render Ball
+				
 				Ball.render();
 
 				//Render Hole
