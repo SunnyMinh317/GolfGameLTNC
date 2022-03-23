@@ -1,4 +1,6 @@
 #pragma once
+#include <iostream>
+#include <iomanip>
 //The Ball that will move around on the screen
 class Ball
 {
@@ -25,13 +27,14 @@ public:
 private:
 	float mPosX, mPosY;
 	float mVelX, mVelY;
+	float friction = 150;
 };
 
 Ball::Ball()
 {
 	//Initialize the position
-	mPosX = 0;
-	mPosY = 0;
+	mPosX = SCREEN_WIDTH/2;
+	mPosY = SCREEN_HEIGHT/2;
 
 	//Initialize the velocity
 	mVelX = 0;
@@ -52,6 +55,7 @@ void Ball::handleEvent(SDL_Event& e)
 		case SDLK_RIGHT: mVelX += Ball_VEL; break;
 		}
 	}
+
 	//If a key was released
 	else if (e.type == SDL_KEYUP && e.key.repeat == 0)
 	{
@@ -64,35 +68,64 @@ void Ball::handleEvent(SDL_Event& e)
 		case SDLK_RIGHT: mVelX -= Ball_VEL; break;
 		}
 	}
+
+	if (e.type == SDL_MOUSEBUTTONUP) {
+		mVelX = 4 * (-e.button.x + mPosX);
+		mVelY = 4 * (-e.button.y + mPosY);
+	}
 }
 
 void Ball::move(float timeStep)
 {
-	//Move the Ball left or right
-	mPosX += mVelX * timeStep;
+	if (abs(mVelX) > 0.1 && abs(mVelY) > 0.1) {
+		float ax = friction * abs(mVelX) / abs(mVelY);
+		float ay = friction * abs(mVelY) / abs(mVelX);
+		//Move the Ball left or right
+		mPosX += mVelX * timeStep;
 
-	//If the Ball went too far to the left or right
-	if (mPosX < 0)
-	{
-		mPosX = 0;
-	}
-	else if (mPosX > SCREEN_WIDTH - Ball_WIDTH)
-	{
-		mPosX = SCREEN_WIDTH - Ball_WIDTH;
-	}
+		//If the Ball went too far to the left or right
+		if (mPosX < 0)
+		{
+			mPosX = 0;
+			mVelX = -mVelX;
+		}
+		else if (mPosX > SCREEN_WIDTH - Ball_WIDTH)
+		{
+			mPosX = SCREEN_WIDTH - Ball_WIDTH;
+			mVelX = -mVelX;
+		}
 
-	//Move the Ball up or down
-	mPosY += mVelY * timeStep;
+		//Move the Ball up or down
+		mPosY += mVelY * timeStep;
 
-	//If the Ball went too far up or down
-	if (mPosY < 0)
-	{
-		mPosY = 0;
+		//If the Ball went too far up or down
+		if (mPosY < 0)
+		{
+			mPosY = 0;
+			mVelY = -mVelY;
+		}
+		else if (mPosY > SCREEN_HEIGHT - Ball_HEIGHT)
+		{
+			mPosY = SCREEN_HEIGHT - Ball_HEIGHT;
+			mVelY = -mVelY;
+		}
+
+		if (mVelX > 0) {
+			mVelX -= ax * timeStep;
+		}
+		else if (mVelX < 0) {
+			mVelX += ax * timeStep;
+		}
+
+		if (mVelY > 0) {
+			mVelY -= ay * timeStep;
+		}
+		else if (mVelY < 0) {
+			mVelY += ay * timeStep;
+		}
+		//std::cout << "(" << std::setprecision(2) << std::fixed << mVelX << "," << std::setprecision(2) << std::fixed << mVelY <<"),";
 	}
-	else if (mPosY > SCREEN_HEIGHT - Ball_HEIGHT)
-	{
-		mPosY = SCREEN_HEIGHT - Ball_HEIGHT;
-	}
+	
 }
 
 void Ball::render()
