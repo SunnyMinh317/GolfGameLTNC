@@ -78,6 +78,8 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
+    <IncludePath>C:\SDL2_image\include;C:\SDL2\include;$(IncludePath)</IncludePath>
+    <LibraryPath>C:\SDL2_image\lib\x86;C:\SDL2\lib\x86;C:\SDL2_image\lib\x64;C:\SDL2\lib\x64;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
@@ -120,6 +122,8 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>SDL2_image.lib;SDL2.lib;SDL2main.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>C:\SDL2_image\lib\x86;C:\SDL2_image\lib\x64;C:\SDL2\lib\x64;C:\SDL2\lib\x86;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -142,10 +146,10 @@
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Ball.h" />
-    <ClInclude Include="Hole.h" />
-    <ClInclude Include="Texture.h" />
-    <ClInclude Include="Timer.h" />
+    <ClInclude Include="headers\Ball.h" />
+    <ClInclude Include="headers\Hole.h" />
+    <ClInclude Include="headers\Texture.h" />
+    <ClInclude Include="headers\Timer.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

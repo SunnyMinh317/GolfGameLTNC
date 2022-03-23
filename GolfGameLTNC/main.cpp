@@ -1,6 +1,7 @@
-#include<bits10_1.h>
-#include<iostream>
-int main(){
-    std::cout<<"hehe";
-    return 0;
+#include <iostream>
+#include <SDL.h>
+#include <SDL_image.h>
+#include "headers/Ball.h"
+int main(int argc, char *args[]) {
+    
 }
