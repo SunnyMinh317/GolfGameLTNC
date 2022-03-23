@@ -21,6 +21,7 @@ SDL_Renderer* gRenderer = NULL;
 #include "headers/Ball.h"
 #include "headers/Hole.h"
 #include "headers/Timer.h"
+#include "headers/Button.h"
 
 //Starts up SDL and creates window
 bool init();
@@ -96,6 +97,10 @@ bool loadMedia()
 		printf("Failed to load Ball texture!\n");
 		success = false;
 	}
+	if (!gGlowTexture.loadFromFile("pictures/dotglow.bmp")) {
+		printf("Failed to load Glow texture!\n");
+		success = false;
+	}
 	//Load Hole texture
 	if (!gHoleTexture.loadFromFile("pictures/hole.png"))
 	{
@@ -109,6 +114,7 @@ bool loadMedia()
 void close()
 {
 	//Free loaded images
+	gGlowTexture.free();
 	gBallTexture.free();
 	gHoleTexture.free();
 
@@ -150,6 +156,7 @@ int main(int argc, char* args[])
 			//identify Hole
 			Hole Hole;
 
+
 			//Keeps track of time between steps
 			LTimer stepTimer;
 
@@ -181,6 +188,7 @@ int main(int argc, char* args[])
 				//Clear screen
 				SDL_SetRenderDrawColor(gRenderer, 0xFF, 0xFF, 0xFF, 0xFF);
 				SDL_RenderClear(gRenderer);
+
 
 				//Render Ball
 				Ball.render();

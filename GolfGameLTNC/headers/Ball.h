@@ -1,6 +1,7 @@
 #pragma once
 #include <iostream>
 #include <iomanip>
+#include "Button.h"
 //The Ball that will move around on the screen
 class Ball
 {
@@ -24,6 +25,8 @@ public:
 	//Shows the Ball on the screen
 	void render();
 
+	bool Inside();
+
 private:
 	float mPosX, mPosY;
 	float mVelX, mVelY;
@@ -41,37 +44,69 @@ Ball::Ball()
 	mVelY = 0;
 }
 
+bool Ball::Inside()
+{
+	bool inside = true;
+	int x, y;
+	SDL_GetMouseState(&x, &y);
+
+	//Mouse is left of the button
+	if (x < mPosX)
+	{
+		inside = false;
+	}
+	//Mouse is right of the button
+	else if (x > mPosX + Ball_WIDTH)
+	{
+		inside = false;
+	}
+	//Mouse above the button
+	else if (y < mPosY)
+	{
+		inside = false;
+	}
+	//Mouse below the button
+	else if (y > mPosY + Ball_HEIGHT)
+	{
+		inside = false;
+	}
+	return inside;
+}
+
 void Ball::handleEvent(SDL_Event& e)
 {
-	//If a key was pressed
-	if (e.type == SDL_KEYDOWN && e.key.repeat == 0)
-	{
-		//Adjust the velocity
-		switch (e.key.keysym.sym)
+	//TAM THOI DE !INSIDE() VI CHUA NGHI RA CACH KEO THA NEU DAT INSIDE() O DAY
+	if (!Inside()) {
+		//If a key was pressed
+		if (e.type == SDL_KEYDOWN && e.key.repeat == 0)
 		{
-		case SDLK_UP: mVelY -= Ball_VEL; break;
-		case SDLK_DOWN: mVelY += Ball_VEL; break;
-		case SDLK_LEFT: mVelX -= Ball_VEL; break;
-		case SDLK_RIGHT: mVelX += Ball_VEL; break;
+			//Adjust the velocity
+			switch (e.key.keysym.sym)
+			{
+			case SDLK_UP: mVelY -= Ball_VEL; break;
+			case SDLK_DOWN: mVelY += Ball_VEL; break;
+			case SDLK_LEFT: mVelX -= Ball_VEL; break;
+			case SDLK_RIGHT: mVelX += Ball_VEL; break;
+			}
 		}
-	}
 
-	//If a key was released
-	else if (e.type == SDL_KEYUP && e.key.repeat == 0)
-	{
-		//Adjust the velocity
-		switch (e.key.keysym.sym)
+		//If a key was released
+		else if (e.type == SDL_KEYUP && e.key.repeat == 0)
 		{
-		case SDLK_UP: mVelY += Ball_VEL; break;
-		case SDLK_DOWN: mVelY -= Ball_VEL; break;
-		case SDLK_LEFT: mVelX += Ball_VEL; break;
-		case SDLK_RIGHT: mVelX -= Ball_VEL; break;
+			//Adjust the velocity
+			switch (e.key.keysym.sym)
+			{
+			case SDLK_UP: mVelY += Ball_VEL; break;
+			case SDLK_DOWN: mVelY -= Ball_VEL; break;
+			case SDLK_LEFT: mVelX += Ball_VEL; break;
+			case SDLK_RIGHT: mVelX -= Ball_VEL; break;
+			}
 		}
-	}
 
-	if (e.type == SDL_MOUSEBUTTONUP) {
-		mVelX = 4 * (-e.button.x + mPosX);
-		mVelY = 4 * (-e.button.y + mPosY);
+		if (e.type == SDL_MOUSEBUTTONUP) {
+			mVelX = 4 * (-e.button.x + mPosX);
+			mVelY = 4 * (-e.button.y + mPosY);
+		}
 	}
 }
 
