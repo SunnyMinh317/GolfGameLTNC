@@ -96,6 +96,12 @@ bool loadMedia()
 		printf("Failed to load Ball texture!\n");
 		success = false;
 	}
+	//Load Hole texture
+	if (!gHoleTexture.loadFromFile("pictures/hole.png"))
+	{
+		printf("Failed to load Hole texture!\n");
+		success = false;
+	}
 
 	return success;
 }
@@ -104,6 +110,7 @@ void close()
 {
 	//Free loaded images
 	gBallTexture.free();
+	gHoleTexture.free();
 
 	//Destroy window	
 	SDL_DestroyRenderer(gRenderer);
@@ -140,6 +147,8 @@ int main(int argc, char* args[])
 
 			//The Ball that will be moving around on the screen
 			Ball Ball;
+			//identify Hole
+			Hole Hole;
 
 			//Keeps track of time between steps
 			LTimer stepTimer;
@@ -175,6 +184,9 @@ int main(int argc, char* args[])
 
 				//Render Ball
 				Ball.render();
+
+				//Render Hole
+				Hole.render();
 
 				//Update screen
 				SDL_RenderPresent(gRenderer);

@@ -1,1 +1,2 @@
 C:\Users\HP\Desktop\CodingProject\GolfGameLTNC\x64\Debug\GolfGameLTNC.exe
+D:\GolfGameLTNC\GolfGameLTNC\x64\Debug\GolfGameLTNC.exe
