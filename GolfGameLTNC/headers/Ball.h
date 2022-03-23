@@ -27,6 +27,14 @@ public:
 
 	bool Inside();
 
+	float getPosX() {
+		return mPosX;
+	}
+
+	float getPosY() {
+		return mPosY;
+	}
+
 private:
 	float mPosX, mPosY;
 	float mVelX, mVelY;
