@@ -38,7 +38,7 @@ public:
 private:
 	float mPosX, mPosY;
 	float mVelX, mVelY;
-	float friction = 150;
+	float friction = 100;
 };
 
 Ball::Ball()
@@ -85,32 +85,6 @@ void Ball::handleEvent(SDL_Event& e)
 {
 	//TAM THOI DE !INSIDE() VI CHUA NGHI RA CACH KEO THA NEU DAT INSIDE() O DAY
 	if (!Inside()) {
-		//If a key was pressed
-		if (e.type == SDL_KEYDOWN && e.key.repeat == 0)
-		{
-			//Adjust the velocity
-			switch (e.key.keysym.sym)
-			{
-			case SDLK_UP: mVelY -= Ball_VEL; break;
-			case SDLK_DOWN: mVelY += Ball_VEL; break;
-			case SDLK_LEFT: mVelX -= Ball_VEL; break;
-			case SDLK_RIGHT: mVelX += Ball_VEL; break;
-			}
-		}
-
-		//If a key was released
-		else if (e.type == SDL_KEYUP && e.key.repeat == 0)
-		{
-			//Adjust the velocity
-			switch (e.key.keysym.sym)
-			{
-			case SDLK_UP: mVelY += Ball_VEL; break;
-			case SDLK_DOWN: mVelY -= Ball_VEL; break;
-			case SDLK_LEFT: mVelX += Ball_VEL; break;
-			case SDLK_RIGHT: mVelX -= Ball_VEL; break;
-			}
-		}
-
 		if (e.type == SDL_MOUSEBUTTONUP) {
 			mVelX = 4 * (-e.button.x + mPosX);
 			mVelY = 4 * (-e.button.y + mPosY);
