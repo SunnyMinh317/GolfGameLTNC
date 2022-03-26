@@ -1,1 +1,4 @@
-﻿  GolfGameLTNC.vcxproj -> C:\Users\HP\Desktop\CodingProject\GolfGameLTNC\x64\Debug\GolfGameLTNC.exe
+﻿  main.cpp
+C:\Users\HP\Desktop\CodingProject\GolfGameLTNC\headers\Button.h(51,16): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
+C:\Users\HP\Desktop\CodingProject\GolfGameLTNC\headers\Button.h(52,16): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
+  GolfGameLTNC.vcxproj -> C:\Users\HP\Desktop\CodingProject\GolfGameLTNC\x64\Debug\GolfGameLTNC.exe

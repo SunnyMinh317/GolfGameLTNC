@@ -32,5 +32,8 @@
     <ClInclude Include="headers\Hole.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="headers\Button.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

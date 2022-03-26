@@ -148,6 +148,6 @@ void Ball::move(float timeStep)
 void Ball::render()
 {
 	//Show the Ball
-	gBallTexture.render((int)mPosX, (int)mPosY);
+	gBallTexture.render((int)mPosX, (int)mPosY, Ball_WIDTH, Ball_HEIGHT);
 }
 

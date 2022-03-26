@@ -147,6 +147,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="headers\Ball.h" />
+    <ClInclude Include="headers\Button.h" />
     <ClInclude Include="headers\Hole.h" />
     <ClInclude Include="headers\Texture.h" />
     <ClInclude Include="headers\Timer.h" />

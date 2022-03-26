@@ -1,9 +1,9 @@
 #pragma once
 #include<iostream>
 #include "Texture.h"
-
-const int BUTTON_WIDTH = 20;
-const int BUTTON_HEIGHT = 20;
+#include "Ball.h"
+const int BUTTON_WIDTH = 50;
+const int BUTTON_HEIGHT = 50;
 const int TOTAL_BUTTONS = 4;
 
 
@@ -24,6 +24,7 @@ public:
 	void render();
 
 	bool Inside();
+	friend class Ball;
 
 private:
 	//Top left position
@@ -117,5 +118,5 @@ void LButton::render()
 {
 	gGlowTexture.setAlpha(mCurrentAlpha);
 	//Show current button sprite
-	gGlowTexture.render(mPosition.x, mPosition.y);
+	gGlowTexture.render(mPosition.x - (BUTTON_WIDTH/2 - 10), mPosition.y - (BUTTON_HEIGHT/ 2 - 10), BUTTON_WIDTH, BUTTON_HEIGHT);
 }

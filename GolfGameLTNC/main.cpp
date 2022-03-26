@@ -18,10 +18,11 @@ SDL_Window* gWindow = NULL;
 SDL_Renderer* gRenderer = NULL;
 
 #include "headers/Texture.h"
+#include "headers/Button.h"
 #include "headers/Ball.h"
 #include "headers/Hole.h"
 #include "headers/Timer.h"
-#include "headers/Button.h"
+
 
 //Starts up SDL and creates window
 bool init();
@@ -92,12 +93,12 @@ bool loadMedia()
 	bool success = true;
 
 	//Load Ball texture
-	if (!gBallTexture.loadFromFile("pictures/dot.bmp"))
+	if (!gBallTexture.loadFromFile("pictures/tileset/Golfball.png"))
 	{
 		printf("Failed to load Ball texture!\n");
 		success = false;
 	}
-	if (!gGlowTexture.loadFromFile("pictures/dotglow.bmp")) {
+	if (!gGlowTexture.loadFromFile("pictures/GolfGlow.png")) {
 		printf("Failed to load Glow texture!\n");
 		success = false;
 	}
@@ -188,7 +189,7 @@ int main(int argc, char* args[])
 				stepTimer.start();
 
 				//Clear screen
-				SDL_SetRenderDrawColor(gRenderer, 0xFF, 0xFF, 0xFF, 0xFF);
+				SDL_SetRenderDrawColor(gRenderer, 0x80, 0xC6, 0x72, 0xFF);
 				SDL_RenderClear(gRenderer);
 
 				GButton.setPosition(Ball.getPosX(), Ball.getPosY());
