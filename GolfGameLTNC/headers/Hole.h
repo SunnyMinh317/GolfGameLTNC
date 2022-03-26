@@ -1,5 +1,5 @@
 #pragma once
-
+#include "Ball.h"
 class Hole
 {
 public:
@@ -12,20 +12,32 @@ public:
 
 	//Shows the Hole on the screen
 	void render();
+	
+
+	float getHoleX() {
+		return holePosX;
+	}
+
+	float getHoleY() {
+		return holePosY;
+	}
 
 private:
-	float PosX, PosY;
+	friend class Ball;
+	float holePosX;
+	float holePosY;
 };
 
 Hole::Hole()
 {
 	//set temporary position
-	PosX = 50;
-	PosY = 50;
+	holePosX = 50;
+	holePosY = 50;
 }
 
 void Hole::render()
 {
 	//Show the Hole
-	gHoleTexture.render((int)PosX, (int)PosY);
+	gHoleTexture.render((int)holePosX, (int)holePosY);
+
 }

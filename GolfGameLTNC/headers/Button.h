@@ -35,7 +35,7 @@ private:
 };
 
 SDL_Rect gSpriteClips = { 0,0,BUTTON_WIDTH,BUTTON_HEIGHT };
-LTexture gGlowTexture;
+
 LButton GButton;
 
 LButton::LButton()
@@ -118,5 +118,5 @@ void LButton::render()
 {
 	gGlowTexture.setAlpha(mCurrentAlpha);
 	//Show current button sprite
-	gGlowTexture.render(mPosition.x - (BUTTON_WIDTH/2 - 10), mPosition.y - (BUTTON_HEIGHT/ 2 - 10), BUTTON_WIDTH, BUTTON_HEIGHT);
+	//gGlowTexture.render(mPosition.x - (BUTTON_WIDTH/2 - 10), mPosition.y - (BUTTON_HEIGHT/ 2 - 10), BUTTON_WIDTH, BUTTON_HEIGHT);
 }

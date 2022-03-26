@@ -19,8 +19,8 @@ SDL_Renderer* gRenderer = NULL;
 
 #include "headers/Texture.h"
 #include "headers/Button.h"
-#include "headers/Ball.h"
 #include "headers/Hole.h"
+#include "headers/Ball.h"
 #include "headers/Timer.h"
 
 

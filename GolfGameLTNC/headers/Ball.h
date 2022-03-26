@@ -2,8 +2,10 @@
 #include <iostream>
 #include <iomanip>
 #include "Button.h"
+#include "Hole.h"
+LTexture gGlowTexture;
 //The Ball that will move around on the screen
-class Ball
+class Ball : public Hole
 {
 public:
 	//The dimensions of the Ball
@@ -27,6 +29,8 @@ public:
 
 	bool Inside();
 
+	void glow();
+
 	float getPosX() {
 		return mPosX;
 	}
@@ -35,10 +39,15 @@ public:
 		return mPosY;
 	}
 
+	friend class Hole;
 private:
 	float mPosX, mPosY;
 	float mVelX, mVelY;
 	float friction = 100;
+
+	//Glow dimensions
+	int BUTTON_WIDTH = 50;
+	int BUTTON_HEIGHT = 50;
 };
 
 Ball::Ball()
@@ -50,6 +59,8 @@ Ball::Ball()
 	//Initialize the velocity
 	mVelX = 0;
 	mVelY = 0;
+
+	
 }
 
 bool Ball::Inside()
@@ -81,16 +92,23 @@ bool Ball::Inside()
 	return inside;
 }
 
+void Ball::glow() {
+	if (Inside()) {
+		gGlowTexture.render(mPosX - (BUTTON_WIDTH / 2 - 10), mPosY - (BUTTON_HEIGHT / 2 - 10), BUTTON_WIDTH, BUTTON_HEIGHT);
+	}
+}
+
 void Ball::handleEvent(SDL_Event& e)
 {
 	//TAM THOI DE !INSIDE() VI CHUA NGHI RA CACH KEO THA NEU DAT INSIDE() O DAY
-	if (!Inside()) {
-		if (e.type == SDL_MOUSEBUTTONUP) {
-			mVelX = 4 * (-e.button.x + mPosX);
-			mVelY = 4 * (-e.button.y + mPosY);
-		}
+	if (e.type == SDL_MOUSEBUTTONUP) {
+		mVelX = 4 * (-e.button.x + mPosX);
+		mVelY = 4 * (-e.button.y + mPosY);
 	}
+	
 }
+
+
 
 void Ball::move(float timeStep)
 {
@@ -140,13 +158,15 @@ void Ball::move(float timeStep)
 		else if (mVelY < 0) {
 			mVelY += ay * timeStep;
 		}
-		//std::cout << "(" << std::setprecision(2) << std::fixed << mVelX << "," << std::setprecision(2) << std::fixed << mVelY <<"),";
 	}
 	
 }
 
 void Ball::render()
 {
+	//Glow the ball
+	glow();
+
 	//Show the Ball
 	gBallTexture.render((int)mPosX, (int)mPosY, Ball_WIDTH, Ball_HEIGHT);
 }
