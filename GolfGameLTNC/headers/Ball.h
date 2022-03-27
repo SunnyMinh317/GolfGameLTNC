@@ -57,6 +57,7 @@ public:
 			mPosY = getHoleY() + 5;
 			std::cout << "You won!";
 			win = true;
+			//level++ reset pos de het loop
 		}
 		return win;
 	}
