@@ -103,7 +103,7 @@ bool loadMedia()
 		success = false;
 	}
 	//Load Hole texture
-	if (!gHoleTexture.loadFromFile("pictures/hole.png"))
+	if (!gHoleTexture.loadFromFile("pictures/hole2.png"))
 	{
 		printf("Failed to load Hole texture!\n");
 		success = false;
@@ -175,7 +175,7 @@ int main(int argc, char* args[])
 
 					//Handle input for the Ball
 					Ball.handleEvent(e);
-
+					
 					GButton.handleEvent(e);
 				}
 
@@ -194,12 +194,16 @@ int main(int argc, char* args[])
 
 				GButton.setPosition(Ball.getPosX(), Ball.getPosY());
 				GButton.render();
-				//Render Ball
-				
-				Ball.render();
 
 				//Render Hole
 				Hole.render();
+
+				//Render Ball
+
+				Ball.render();
+
+				//Check game state
+				Ball.win();
 
 				//Update screen
 				SDL_RenderPresent(gRenderer);

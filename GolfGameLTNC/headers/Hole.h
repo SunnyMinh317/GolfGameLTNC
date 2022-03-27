@@ -4,8 +4,8 @@ class Hole
 {
 public:
 	//The dimensions of the Hole
-	const int Hole_WIDTH = 16;
-	const int Hole_HEIGHT = 19;
+	const int HOLE_WIDTH = 30;
+	const int HOLE_HEIGHT = 30;
 
 	//Initializes the variables
 	Hole();
@@ -22,6 +22,13 @@ public:
 		return holePosY;
 	}
 
+	float getHoleCenterX() {
+		return holePosX + HOLE_WIDTH / 2;
+	}
+
+	float getHoleCenterY() {
+		return holePosY - HOLE_HEIGHT / 2;
+	}
 private:
 	friend class Ball;
 	float holePosX;
@@ -38,6 +45,6 @@ Hole::Hole()
 void Hole::render()
 {
 	//Show the Hole
-	gHoleTexture.render((int)holePosX, (int)holePosY);
+	gHoleTexture.render((int)holePosX, (int)holePosY, HOLE_WIDTH, HOLE_HEIGHT);
 
 }

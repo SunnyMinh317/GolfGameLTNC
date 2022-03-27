@@ -9,11 +9,11 @@ class Ball : public Hole
 {
 public:
 	//The dimensions of the Ball
-	static const int Ball_WIDTH = 20;
-	static const int Ball_HEIGHT = 20;
+	static const int BALL_WIDTH = 20;
+	static const int BALL_HEIGHT = 20;
 
 	//Maximum axis velocity of the Ball
-	static const int Ball_VEL = 640;
+	static const int BALL_VEL = 640;
 
 	//Initializes the variables
 	Ball();
@@ -37,6 +37,28 @@ public:
 
 	float getPosY() {
 		return mPosY;
+	}
+
+	float getBallCenterX() {
+		return mPosX + BALL_WIDTH / 2;
+	}
+
+	float getBallCenterY() {
+		return mPosY - BALL_HEIGHT / 2;
+	}
+
+	bool win() {
+		bool win = false;
+		
+		if (SDL_sqrt(pow(getBallCenterX() - getHoleCenterX(),2) + pow(getBallCenterY() - getHoleCenterY(), 2))<=abs(HOLE_WIDTH-BALL_WIDTH)) {
+			mVelX = 0;
+			mVelY = 0;
+			mPosX = getHoleX() + 5;
+			mPosY = getHoleY() + 5;
+			std::cout << "You won!";
+			win = true;
+		}
+		return win;
 	}
 
 	friend class Hole;
@@ -75,7 +97,7 @@ bool Ball::Inside()
 		inside = false;
 	}
 	//Mouse is right of the button
-	else if (x > mPosX + Ball_WIDTH)
+	else if (x > mPosX + BALL_WIDTH)
 	{
 		inside = false;
 	}
@@ -85,7 +107,7 @@ bool Ball::Inside()
 		inside = false;
 	}
 	//Mouse below the button
-	else if (y > mPosY + Ball_HEIGHT)
+	else if (y > mPosY + BALL_HEIGHT)
 	{
 		inside = false;
 	}
@@ -102,8 +124,12 @@ void Ball::handleEvent(SDL_Event& e)
 {
 	//TAM THOI DE !INSIDE() VI CHUA NGHI RA CACH KEO THA NEU DAT INSIDE() O DAY
 	if (e.type == SDL_MOUSEBUTTONUP) {
+		std::cout << getHoleCenterX() << " " << getHoleCenterY() << std::endl;
+
 		mVelX = 4 * (-e.button.x + mPosX);
 		mVelY = 4 * (-e.button.y + mPosY);
+		std::cout << "Hole: " << getHoleX() << " " << getHoleY() << std::endl;
+		std::cout << "Ball: "<<getPosX() << " " << getPosY() << std::endl;
 	}
 	
 }
@@ -124,9 +150,9 @@ void Ball::move(float timeStep)
 			mPosX = 0;
 			mVelX = -mVelX;
 		}
-		else if (mPosX > SCREEN_WIDTH - Ball_WIDTH)
+		else if (mPosX > SCREEN_WIDTH - BALL_WIDTH)
 		{
-			mPosX = SCREEN_WIDTH - Ball_WIDTH;
+			mPosX = SCREEN_WIDTH - BALL_WIDTH;
 			mVelX = -mVelX;
 		}
 
@@ -139,9 +165,9 @@ void Ball::move(float timeStep)
 			mPosY = 0;
 			mVelY = -mVelY;
 		}
-		else if (mPosY > SCREEN_HEIGHT - Ball_HEIGHT)
+		else if (mPosY > SCREEN_HEIGHT - BALL_HEIGHT)
 		{
-			mPosY = SCREEN_HEIGHT - Ball_HEIGHT;
+			mPosY = SCREEN_HEIGHT - BALL_HEIGHT;
 			mVelY = -mVelY;
 		}
 
@@ -168,6 +194,6 @@ void Ball::render()
 	glow();
 
 	//Show the Ball
-	gBallTexture.render((int)mPosX, (int)mPosY, Ball_WIDTH, Ball_HEIGHT);
+	gBallTexture.render((int)mPosX, (int)mPosY, BALL_WIDTH, BALL_HEIGHT);
 }
 
