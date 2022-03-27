@@ -91,7 +91,10 @@ bool loadMedia()
 {
 	//Loading success flag
 	bool success = true;
-
+	if (!gPointTexture.loadFromFile("picture/tileset/point.png"))
+	{
+		printf("Failed to load Point texture!\n");
+	}
 	//Load Ball texture
 	if (!gBallTexture.loadFromFile("pictures/tileset/Golfball.png"))
 	{
@@ -176,7 +179,6 @@ int main(int argc, char* args[])
 					//Handle input for the Ball
 					Ball.handleEvent(e);
 					
-					GButton.handleEvent(e);
 				}
 
 				//Calculate time step
@@ -192,15 +194,13 @@ int main(int argc, char* args[])
 				SDL_SetRenderDrawColor(gRenderer, 0x80, 0xC6, 0x72, 0xFF);
 				SDL_RenderClear(gRenderer);
 
-				GButton.setPosition(Ball.getPosX(), Ball.getPosY());
-				GButton.render();
-
 				//Render Hole
 				Hole.render();
 
 				//Render Ball
 
 				Ball.render();
+
 
 				//Check game state
 				Ball.win();

@@ -3,7 +3,12 @@
 #include <iomanip>
 #include "Button.h"
 #include "Hole.h"
+
+
 LTexture gGlowTexture;
+
+LTexture gPointTexture;
+
 //The Ball that will move around on the screen
 class Ball : public Hole
 {
@@ -30,6 +35,13 @@ public:
 	bool Inside();
 
 	void glow();
+
+	void point();
+
+	void setInitPos(float x, float y) {
+		InitX = x;
+		InitY = y;
+	}
 
 	float getPosX() {
 		return mPosX;
@@ -63,6 +75,7 @@ public:
 
 	friend class Hole;
 private:
+	float InitX, InitY;
 	float mPosX, mPosY;
 	float mVelX, mVelY;
 	float friction = 100;
@@ -120,18 +133,34 @@ void Ball::glow() {
 	}
 }
 
+void Ball::point() {
+	gPointTexture.render(mPosX - (100 / 2 - 10), mPosY - (200 / 2 - 10), 100, 200, NULL, 0.0);
+}
+
 void Ball::handleEvent(SDL_Event& e)
 {
-	//TAM THOI DE !INSIDE() VI CHUA NGHI RA CACH KEO THA NEU DAT INSIDE() O DAY
-	if (e.type == SDL_MOUSEBUTTONUP) {
-		std::cout << getHoleCenterX() << " " << getHoleCenterY() << std::endl;
+	if (mVelX == 0 && mVelY == 0) {
+		if (e.type == SDL_MOUSEBUTTONDOWN && mVelX == 0 && mVelY == 0)
+		{
+			int x;
+			int y;
+			SDL_GetMouseState(&x, &y);
+			setInitPos(x, y);
+		}
+		if (e.type == SDL_MOUSEMOTION) {
+			this->point();
+		}
+		else if (e.type == SDL_MOUSEBUTTONUP && mVelX == 0 && mVelY == 0)
+		{
+			std::cout << getHoleCenterX() << " " << getHoleCenterY() << std::endl;
 
-		mVelX = 4 * (-e.button.x + mPosX);
-		mVelY = 4 * (-e.button.y + mPosY);
-		std::cout << "Hole: " << getHoleX() << " " << getHoleY() << std::endl;
-		std::cout << "Ball: "<<getPosX() << " " << getPosY() << std::endl;
+			mVelX = 4 * (-e.button.x + InitX);
+			mVelY = 4 * (-e.button.y + InitY);
+
+			std::cout << "Hole: " << getHoleX() << " " << getHoleY() << std::endl;
+			std::cout << "Ball: " << getPosX() << " " << getPosY() << std::endl;
+		}
 	}
-	
 }
 
 
@@ -184,6 +213,10 @@ void Ball::move(float timeStep)
 		else if (mVelY < 0) {
 			mVelY += ay * timeStep;
 		}
+	}
+	else {
+		mVelX = 0;
+		mVelY = 0;
 	}
 	
 }
