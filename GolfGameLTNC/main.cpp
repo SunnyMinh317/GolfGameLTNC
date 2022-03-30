@@ -91,7 +91,7 @@ bool loadMedia()
 {
 	//Loading success flag
 	bool success = true;
-	if (!gPointTexture.loadFromFile("picture/tileset/point.png"))
+	if (!gPointTexture.loadFromFile("pictures/point.png"))
 	{
 		printf("Failed to load Point texture!\n");
 	}
@@ -121,6 +121,7 @@ void close()
 	gGlowTexture.free();
 	gBallTexture.free();
 	gHoleTexture.free();
+	//gPointTexture.free();
 
 	//Destroy window	
 	SDL_DestroyRenderer(gRenderer);

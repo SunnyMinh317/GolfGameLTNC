@@ -229,5 +229,8 @@ void Ball::render()
 
 	//Show the Ball
 	gBallTexture.render((int)mPosX, (int)mPosY, BALL_WIDTH, BALL_HEIGHT);
+
+	//test point
+	//gPointTexture.render((int)mPosX+2, (int)mPosY-32, 16, 64);
 }
 
