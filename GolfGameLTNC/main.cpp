@@ -121,6 +121,7 @@ void close()
 	gGlowTexture.free();
 	gBallTexture.free();
 	gHoleTexture.free();
+	gPointTexture.free();
 	//gPointTexture.free();
 
 	//Destroy window	

@@ -36,7 +36,7 @@ public:
 
 	void glow();
 
-	void point();
+	void point(bool spoint, float degree);
 
 	void setInitPos(float x, float y) {
 		InitX = x;
@@ -76,6 +76,8 @@ public:
 
 	friend class Hole;
 private:
+	bool spoint,pressed=false;
+	float degree;
 	float InitX, InitY;
 	float mPosX, mPosY;
 	float mVelX, mVelY;
@@ -134,25 +136,29 @@ void Ball::glow() {
 	}
 }
 
-void Ball::point() {
-	gPointTexture.render(mPosX - (100 / 2 - 10), mPosY - (200 / 2 - 10), 100, 200, NULL, 0.0);
+void Ball::point(bool spoint,float degree){
+	if (spoint) gPointTexture.render(mPosX - (15 / 2 - 10), mPosY - (53 / 2 - 10), 15, 53, NULL,degree);
 }
 
 void Ball::handleEvent(SDL_Event& e)
 {
+	spoint = false;
 	if (mVelX == 0 && mVelY == 0) {
 		if (e.type == SDL_MOUSEBUTTONDOWN && mVelX == 0 && mVelY == 0)
 		{
+			pressed = true;
 			int x;
 			int y;
 			SDL_GetMouseState(&x, &y);
 			setInitPos(x, y);
 		}
 		if (e.type == SDL_MOUSEMOTION) {
-			this->point();
+			spoint = true;
+			degree = SDL_atan2(-e.button.y + InitY, -e.button.x + InitX) * (180 / 3.1415) + 90;
 		}
-		else if (e.type == SDL_MOUSEBUTTONUP && mVelX == 0 && mVelY == 0)
+		if (e.type == SDL_MOUSEBUTTONUP && mVelX == 0 && mVelY == 0)
 		{
+			pressed = false;
 			std::cout << getHoleCenterX() << " " << getHoleCenterY() << std::endl;
 
 			mVelX = 4 * (-e.button.x + InitX);
@@ -168,7 +174,7 @@ void Ball::handleEvent(SDL_Event& e)
 
 void Ball::move(float timeStep)
 {
-	if (abs(mVelX) > 0.1 && abs(mVelY) > 0.1) {
+	if (abs(mVelX) > 0.5 && abs(mVelY) > 0.5) {
 		float ax = friction * abs(mVelX) / abs(mVelY);
 		float ay = friction * abs(mVelY) / abs(mVelX);
 		//Move the Ball left or right
@@ -226,7 +232,7 @@ void Ball::render()
 {
 	//Glow the ball
 	glow();
-
+	point(spoint&&pressed, degree);
 	//Show the Ball
 	gBallTexture.render((int)mPosX, (int)mPosY, BALL_WIDTH, BALL_HEIGHT);
 
