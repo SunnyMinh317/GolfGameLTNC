@@ -151,6 +151,7 @@
     <ClInclude Include="headers\Hole.h" />
     <ClInclude Include="headers\Texture.h" />
     <ClInclude Include="headers\Timer.h" />
+    <ClInclude Include="Tile.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

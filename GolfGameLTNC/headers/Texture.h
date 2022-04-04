@@ -66,6 +66,7 @@ private:
 //Scene textures
 LTexture gBallTexture;
 LTexture gHoleTexture;
+LTexture gTileTexture;
 
 LTexture::LTexture()
 {

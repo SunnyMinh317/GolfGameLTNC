@@ -3,7 +3,7 @@
 #include <iomanip>
 #include "Button.h"
 #include "Hole.h"
-
+#include "Tile.h"
 
 LTexture gGlowTexture;
 
@@ -86,6 +86,9 @@ private:
 	//Glow dimensions
 	int BUTTON_WIDTH = 50;
 	int BUTTON_HEIGHT = 50;
+
+	//Collision box of ball
+	SDL_Rect mBox;
 };
 
 Ball::Ball()
@@ -170,8 +173,6 @@ void Ball::handleEvent(SDL_Event& e)
 	}
 }
 
-
-
 void Ball::move(float timeStep)
 {
 	if (abs(mVelX) > 0.5 && abs(mVelY) > 0.5) {
@@ -228,6 +229,33 @@ void Ball::move(float timeStep)
 	
 }
 
+
+/**BO SUNG IF BALL TOUCHES WALL LEN TREN NHE
+
+void Ball::move2(Tile* tiles[])
+{
+	//Move the dot left or right
+	mBox.x += mVelX;
+
+	//If the dot went too far to the left or right or touched a wall
+	if ((mBox.x < 0) || (mBox.x + BALL_WIDTH > SCREEN_WIDTH) || touchesWall(mBox, tiles))
+	{
+		//move back
+		mBox.x -= mVelX;
+	}
+
+	//Move the dot up or down
+	mBox.y += mVelY;
+
+	//If the dot went too far up or down or touched a wall
+	if ((mBox.y < 0) || (mBox.y + BALL_HEIGHT > SCREEN_HEIGHT) || touchesWall(mBox, tiles))
+	{
+		//move back
+		mBox.y -= mVelY;
+	}
+}
+*/
+
 void Ball::render()
 {
 	//Glow the ball
@@ -236,7 +264,5 @@ void Ball::render()
 	//Show the Ball
 	gBallTexture.render((int)mPosX, (int)mPosY, BALL_WIDTH, BALL_HEIGHT);
 
-	//test point
-	//gPointTexture.render((int)mPosX+2, (int)mPosY-32, 16, 64);
 }
 

@@ -22,6 +22,7 @@ SDL_Renderer* gRenderer = NULL;
 #include "headers/Hole.h"
 #include "headers/Ball.h"
 #include "headers/Timer.h"
+#include "headers/Tile.h"
 
 
 //Starts up SDL and creates window
@@ -112,6 +113,13 @@ bool loadMedia()
 		success = false;
 	}
 
+	//Load Tile texture
+	if (!gTileTexture.loadFromFile("pictures/tileset/tilemap.png"))
+	{
+		printf("Failed to load Tile texture!\n");
+		success = false;
+	}
+
 	return success;
 }
 
@@ -122,7 +130,7 @@ void close()
 	gBallTexture.free();
 	gHoleTexture.free();
 	gPointTexture.free();
-	//gPointTexture.free();
+	gTileTexture.free();
 
 	//Destroy window	
 	SDL_DestroyRenderer(gRenderer);
@@ -144,6 +152,9 @@ int main(int argc, char* args[])
 	}
 	else
 	{
+		//The level tiles
+		Tile* tileSet[TOTAL_TILES];
+
 		//Load media
 		if (!loadMedia())
 		{
@@ -161,7 +172,6 @@ int main(int argc, char* args[])
 			Ball Ball;
 			//identify Hole
 			Hole Hole;
-
 
 			//Keeps track of time between steps
 			LTimer stepTimer;
@@ -195,6 +205,12 @@ int main(int argc, char* args[])
 				//Clear screen
 				SDL_SetRenderDrawColor(gRenderer, 0x80, 0xC6, 0x72, 0xFF);
 				SDL_RenderClear(gRenderer);
+
+				//Render level
+				for (int i = 0; i < TOTAL_TILES; ++i)
+				{
+					tileSet[i]->render();
+				}
 
 				//Render Hole
 				Hole.render();
