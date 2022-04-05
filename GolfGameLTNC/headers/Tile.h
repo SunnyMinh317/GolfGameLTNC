@@ -1,7 +1,9 @@
 #pragma once
-#include<SDL_rect.h>
-#include<fstream>
-#include "headers/Ball.h"
+#pragma once
+#include <SDL_rect.h>
+#include <fstream>
+#include <string>
+#include "Ball.h"
 
 //Tile constants
 const int TILE_WIDTH = 32;
@@ -57,8 +59,7 @@ Tile::Tile(int x, int y, int tileType)
 //LOI RENDER
 void Tile::render()
 {
-	//gTileTexture.render((int)mBox.x, (int)mBox.y, &gTileClips[mType]);
-	gTileTexture.render((int)mBox.x, (int)mBox.y, TILE_WIDTH, TILE_HEIGHT, &gTileClips[mType]);
+	gTileTexture.render((int)mBox.x, (int)mBox.y, &gTileClips[mType]);
 }
 
 int Tile::getType()
@@ -127,7 +128,7 @@ bool setTiles(Tile* tiles[])
 	int x = 0, y = 0;
 
 	//Open the map
-	std::ifstream map("tile.map");
+	std::ifstream map("headers/tile.map");
 
 	//If the map couldn't be loaded
 	if (map.fail())
@@ -168,12 +169,11 @@ bool setTiles(Tile* tiles[])
 				tilesLoaded = false;
 				break;
 			}
-			/**
 			//Move to next tile spot
-			x += TILE_WIDTH;
+			x += TILE_WIDTH;   
 
 			//If we've gone too far
-			if (x >= LEVEL_WIDTH)
+			if (x >= SCREEN_WIDTH)
 			{
 				//Move back
 				x = 0;
@@ -181,7 +181,7 @@ bool setTiles(Tile* tiles[])
 				//Move to the next row
 				y += TILE_HEIGHT;
 			}
-			*/
+			
 		}
 
 		//Clip the sprite sheet

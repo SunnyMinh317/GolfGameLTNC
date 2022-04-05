@@ -1,13 +1,10 @@
 #pragma once
 #include <iostream>
 #include <iomanip>
-#include "Button.h"
 #include "Hole.h"
-#include "Tile.h"
+#include "Texture.h"
 
-LTexture gGlowTexture;
 
-LTexture gPointTexture;
 
 //The Ball that will move around on the screen
 class Ball : public Hole
@@ -43,6 +40,11 @@ public:
 		InitY = y;
 	}
 
+	void setNewPos(float x, float y) {
+		mPosX = x;
+		mPosY = y;
+	}
+
 	float getPosX() {
 		return mPosX;
 	}
@@ -56,13 +58,17 @@ public:
 	}
 
 	float getBallCenterY() {
-		return mPosY - BALL_HEIGHT / 2;
+		return mPosY + BALL_HEIGHT / 2;
+	}
+
+	SDL_Rect get_Rect() {
+		return mBall;
 	}
 
 	bool win() {
 		bool win = false;
 		
-		if (SDL_sqrt(pow(getBallCenterX() - getHoleCenterX(),2) + pow(getBallCenterY() - getHoleCenterY(), 2))<=abs(HOLE_WIDTH-BALL_WIDTH)) {
+		if (SDL_sqrt(pow(getBallCenterX() - getHoleCenterX(),2) + pow(getBallCenterY() - getHoleCenterY(), 2))<=abs(HOLE_WIDTH-BALL_WIDTH)/2) {
 			mVelX = 0;
 			mVelY = 0;
 			mPosX = getHoleX() + 5;
@@ -83,12 +89,10 @@ private:
 	float mVelX, mVelY;
 	float friction = 100;
 
+	SDL_Rect mBall;
 	//Glow dimensions
 	int BUTTON_WIDTH = 50;
 	int BUTTON_HEIGHT = 50;
-
-	//Collision box of ball
-	SDL_Rect mBox;
 };
 
 Ball::Ball()
@@ -96,12 +100,11 @@ Ball::Ball()
 	//Initialize the position
 	mPosX = SCREEN_WIDTH/2;
 	mPosY = SCREEN_HEIGHT/2;
+	mBall = { (int)mPosX,(int)mPosY,BALL_WIDTH,BALL_WIDTH };
 
 	//Initialize the velocity
 	mVelX = 0;
 	mVelY = 0;
-
-	
 }
 
 bool Ball::Inside()
@@ -111,22 +114,7 @@ bool Ball::Inside()
 	SDL_GetMouseState(&x, &y);
 
 	//Mouse is left of the button
-	if (x < mPosX)
-	{
-		inside = false;
-	}
-	//Mouse is right of the button
-	else if (x > mPosX + BALL_WIDTH)
-	{
-		inside = false;
-	}
-	//Mouse above the button
-	else if (y < mPosY)
-	{
-		inside = false;
-	}
-	//Mouse below the button
-	else if (y > mPosY + BALL_HEIGHT)
+	if (x < mPosX|| x > mPosX + BALL_WIDTH|| y < mPosY|| y > mPosY + BALL_HEIGHT)
 	{
 		inside = false;
 	}
@@ -140,7 +128,9 @@ void Ball::glow() {
 }
 
 void Ball::point(bool spoint,float degree){
-	if (spoint) gPointTexture.render(mPosX - (15 / 2 - 10), mPosY - (53 / 2 - 10), 15, 53, NULL,degree);
+	if (spoint) {
+		gPointTexture.render(mPosX - (15 / 2 - 10), mPosY - (53 / 2 - 10), 15, 53, degree);
+	}
 }
 
 void Ball::handleEvent(SDL_Event& e)
@@ -173,11 +163,13 @@ void Ball::handleEvent(SDL_Event& e)
 	}
 }
 
+
+
 void Ball::move(float timeStep)
 {
 	if (abs(mVelX) > 0.5 && abs(mVelY) > 0.5) {
-		float ax = friction * abs(mVelX) / abs(mVelY);
-		float ay = friction * abs(mVelY) / abs(mVelX);
+		float ax = friction * abs(mVelX / SDL_sqrt(mVelX * mVelX + mVelY * mVelY));
+		float ay = friction * abs(mVelY / SDL_sqrt(mVelX * mVelX + mVelY * mVelY));
 		//Move the Ball left or right
 		mPosX += mVelX * timeStep;
 
@@ -229,33 +221,6 @@ void Ball::move(float timeStep)
 	
 }
 
-
-/**BO SUNG IF BALL TOUCHES WALL LEN TREN NHE
-
-void Ball::move2(Tile* tiles[])
-{
-	//Move the dot left or right
-	mBox.x += mVelX;
-
-	//If the dot went too far to the left or right or touched a wall
-	if ((mBox.x < 0) || (mBox.x + BALL_WIDTH > SCREEN_WIDTH) || touchesWall(mBox, tiles))
-	{
-		//move back
-		mBox.x -= mVelX;
-	}
-
-	//Move the dot up or down
-	mBox.y += mVelY;
-
-	//If the dot went too far up or down or touched a wall
-	if ((mBox.y < 0) || (mBox.y + BALL_HEIGHT > SCREEN_HEIGHT) || touchesWall(mBox, tiles))
-	{
-		//move back
-		mBox.y -= mVelY;
-	}
-}
-*/
-
 void Ball::render()
 {
 	//Glow the ball
@@ -264,5 +229,6 @@ void Ball::render()
 	//Show the Ball
 	gBallTexture.render((int)mPosX, (int)mPosY, BALL_WIDTH, BALL_HEIGHT);
 
+	//test point
+	//gPointTexture.render((int)mPosX+2, (int)mPosY-32, 16, 64);
 }
-

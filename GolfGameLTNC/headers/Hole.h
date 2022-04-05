@@ -27,10 +27,15 @@ public:
 	}
 
 	float getHoleCenterY() {
-		return holePosY - HOLE_HEIGHT / 2;
+		return holePosY + HOLE_HEIGHT / 2;
+	}
+
+	SDL_Rect get_Rect() {
+		return mHole;
 	}
 private:
 	friend class Ball;
+	SDL_Rect mHole;
 	float holePosX;
 	float holePosY;
 };
