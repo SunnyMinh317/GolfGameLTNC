@@ -85,7 +85,7 @@ bool init()
 	return success;
 }
 
-bool loadMedia(Tile* tiles[])
+bool loadMedia()
 {
 	bool success = true;
 	if (!gPointTexture.loadFromFile("pictures/point.png"))
@@ -112,11 +112,6 @@ bool loadMedia(Tile* tiles[])
 		printf("Failed to load Hole texture!\n");
 		success = false;
 	}
-	if (!setTiles(tiles))
-	{
-		printf("Failed to load tile set!\n");
-		success = false;
-	}
 	return success;
 }
 
@@ -135,7 +130,8 @@ int state = 1; //0 = title screen, 1 = game, 2 = end screen
 
 void loadLevel(int level)
 {
-	if (level > 2)
+	std::cout << level << "level" << std::endl;
+	if (level > 1)
 	{
 		state = 2;
 		return;
@@ -144,13 +140,13 @@ void loadLevel(int level)
 	{
 	case 0:
 		ball.setNewPos(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2);
+		setTiles(tileSet, "headers/tile.map");
 		break;
 	case 1:
-		ball.setNewPos(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2);
+		ball.setNewPos(SCREEN_WIDTH / 2+200, SCREEN_HEIGHT / 2+200);
+		setTiles(tileSet, "headers/tile2.map");
 		break;
 	}	
-
-	/*tiles = loadTiles(level);*/
 
 }
 
@@ -161,15 +157,17 @@ void update()
 		if (event.type==SDL_QUIT){
 			quit = true;
 		}
-		if (state == 1)
-		{
-			ball.handleEvent(event);
-		}
+		
+		ball.handleEvent(event);
+		
 	}
 	float timeStep = stepTimer.getTicks() / 1000.f;
 	ball.move(timeStep);
 	stepTimer.start();
-	if (ball.win()) loadLevel(level++);
+	if (ball.win() && state==1) {
+		level++;
+		loadLevel(level);
+	}
 }
 
 void graphics()
@@ -186,8 +184,6 @@ void graphics()
 
 	//Render Ball
 	ball.render();
-
-	
 
 	//Update screen
 	SDL_RenderPresent(gRenderer);
@@ -216,6 +212,7 @@ void game()
 
 void close()
 {
+
 	gGlowTexture.free();
 	gBallTexture.free();
 	gHoleTexture.free();
@@ -240,14 +237,14 @@ int main(int argc, char* args[])
 	else
 	{
 		//Load media
-		if (!loadMedia(tileSet))
+		if (!loadMedia())
 		{
 			printf("Failed to load media!\n");
 		}
 		else
 		{
 			quit = false;
-			loadLevel(0);
+			loadLevel(level);
 			//While application is running
 			while (!quit)
 			{

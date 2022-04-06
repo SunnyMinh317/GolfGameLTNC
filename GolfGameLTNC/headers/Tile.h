@@ -119,7 +119,7 @@ bool checkCollision(SDL_Rect a, SDL_Rect b)
 	return true;
 }
 
-bool setTiles(Tile* tiles[])
+bool setTiles(Tile* tiles[], std::string s)
 {
 	//Success flag
 	bool tilesLoaded = true;
@@ -128,7 +128,7 @@ bool setTiles(Tile* tiles[])
 	int x = 0, y = 0;
 
 	//Open the map
-	std::ifstream map("headers/tile.map");
+	std::ifstream map(s.c_str());
 
 	//If the map couldn't be loaded
 	if (map.fail())
