@@ -88,6 +88,11 @@ bool init()
 bool loadMedia()
 {
 	bool success = true;
+	gPointTexture.addRenderer(gRenderer);
+	gBallTexture.addRenderer(gRenderer);
+	gGlowTexture.addRenderer(gRenderer);
+	gHoleTexture.addRenderer(gRenderer);
+	gTileTexture.addRenderer(gRenderer);
 	if (!gPointTexture.loadFromFile("pictures/point.png"))
 	{
 		printf("Failed to load Point texture!\n");
@@ -179,11 +184,14 @@ void graphics()
 	{
 		tileSet[i]->render();
 	}
-	//Render Hole
-	hole.render();
 
-	//Render Ball
-	ball.render();
+	gHoleTexture.render((int)hole.getHoleX(), (int)hole.getHoleY(), hole.HOLE_WIDTH, hole.HOLE_HEIGHT);
+
+	if (ball.Inside()) gGlowTexture.render(ball.getPosX() - (ball.BUTTON_WIDTH / 2 - 10), ball.getPosY() - (ball.BUTTON_HEIGHT / 2 - 10), ball.BUTTON_WIDTH, ball.BUTTON_HEIGHT);
+
+	if (ball.getPoint()) gPointTexture.render(ball.getPosX() - (15 / 2 - 10), ball.getPosY() - (53 / 2 - 10), 15, 53, ball.getDegree());
+
+	gBallTexture.render(ball.getPosX(), ball.getPosY(), ball.BALL_WIDTH, ball.BALL_HEIGHT);
 
 	//Update screen
 	SDL_RenderPresent(gRenderer);
