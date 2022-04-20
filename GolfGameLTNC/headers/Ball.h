@@ -26,61 +26,17 @@ public:
 
 	//Moves the Ball
 	void move(float timeStep);
-
 	bool Inside();
-
-	void setInitPos(float x, float y) {
-		InitX = x;
-		InitY = y;
-	}
-
-	void setNewPos(float x, float y) {
-		mPosX = x;
-		mPosY = y;
-	}
-
-	float getDegree() {
-		return degree;
-	}
-
-	bool getPoint() {
-		return (pressed && spoint);
-	}
-
-	float getPosX() {
-		return mPosX;
-	}
-
-	float getPosY() {
-		return mPosY;
-	}
-
-	float getBallCenterX() {
-		return mPosX + BALL_WIDTH / 2;
-	}
-
-	float getBallCenterY() {
-		return mPosY + BALL_HEIGHT / 2;
-	}
-
-	SDL_Rect get_Rect() {
-		return mBall;
-	}
-
-	bool win() {
-		bool win = false;
-		
-		if (SDL_sqrt(pow(getBallCenterX() - getHoleCenterX(),2) + pow(getBallCenterY() - getHoleCenterY(), 2))<=abs(HOLE_WIDTH-BALL_WIDTH)/2) {
-			mVelX = 0;
-			mVelY = 0;
-			mPosX = getHoleX() + 5;
-			mPosY = getHoleY() + 5;
-			std::cout << "You won!";
-			win = true;
-			//level++ reset pos de het loop
-		}
-		return win;
-	}
+	void setInitPos(float x, float y);
+	void setNewPos(float x, float y);
+	float getDegree();
+	bool getPoint();
+	float getPosX();
+	float getPosY();
+	float getBallCenterX();
+	float getBallCenterY();
+	SDL_Rect get_Rect();
+	bool win();
 
 	friend class Hole;
 private:
