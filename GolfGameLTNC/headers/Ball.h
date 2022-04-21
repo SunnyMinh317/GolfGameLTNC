@@ -27,59 +27,26 @@ public:
 
 	//Moves the Ball
 	void move(float timeStep);
-
 	bool Inside();
 
-	void setInitPos(float x, float y) {
-		InitX = x;
-		InitY = y;
-	}
+	void setInitPos(float x, float y);
 
-	void setNewPos(float x, float y) {
-		mPosX = x;
-		mPosY = y;
-	}
+	void setNewPos(float x, float y);
 
-	float getDegree() {
-		return degree;
-	}
+	float getDegree();
 
-	bool getPoint() {
-		return (pressed && spoint);
-	}
+	bool getPoint();
 
-	float getPosX() {
-		return mPosX;
-	}
+	float getPosX();
 
-	float getPosY() {
-		return mPosY;
-	}
+	float getPosY();
 
-	float getBallCenterX() {
-		return mPosX + BALL_WIDTH / 2;
-	}
+	float getBallCenterX();
 
-	float getBallCenterY() {
-		return mPosY + BALL_HEIGHT / 2;
-	}
+	float getBallCenterY();
+	SDL_Rect get_Rect();
 
-	SDL_Rect get_Rect() {
-		return mBall;
-	}
-
-	bool win() {
-		bool win = false;
-		
-		if (SDL_sqrt(pow(getBallCenterX() - getHoleCenterX(),2) + pow(getBallCenterY() - getHoleCenterY(), 2))<=abs(HOLE_WIDTH-BALL_WIDTH)/2) {
-			mVelX = 0;
-			mVelY = 0;
-			mPosX = getHoleX() + 5;
-			mPosY = getHoleY() + 5;
-			win = true;
-		}
-		return win;
-	}
+	bool win();
 
 	int getHitCount();
 

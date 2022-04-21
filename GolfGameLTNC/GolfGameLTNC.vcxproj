@@ -152,11 +152,14 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="headers\Ball.h" />
-    <ClInclude Include="headers\Button.h" />
     <ClInclude Include="headers\Hole.h" />
     <ClInclude Include="headers\Texture.h" />
+    <ClInclude Include="headers\Tile.h" />
     <ClInclude Include="headers\Timer.h" />
-    <ClInclude Include="Tile.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="headers\tile.map" />
+    <None Include="headers\tile2.map" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

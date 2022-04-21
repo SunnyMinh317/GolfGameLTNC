@@ -38,20 +38,25 @@
     <ClInclude Include="headers\Ball.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="headers\Hole.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
     <ClInclude Include="headers\Texture.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="headers\Tile.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="headers\Timer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="headers\Hole.h">
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="headers\tile.map">
       <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="headers\Button.h">
+    </None>
+    <None Include="headers\tile2.map">
       <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Tile.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
+    </None>
   </ItemGroup>
 </Project>

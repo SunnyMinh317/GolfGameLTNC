@@ -15,6 +15,59 @@ Ball::Ball()
 	mVelY = 0;
 }
 
+void Ball::setInitPos(float x, float y) {
+	InitX = x;
+	InitY = y;
+}
+
+void Ball::setNewPos(float x, float y) {
+	mPosX = x;
+	mPosY = y;
+}
+
+float Ball::getDegree() {
+	return degree;
+}
+
+bool Ball::getPoint() {
+	return (pressed && spoint);
+}
+
+float Ball::getPosX() {
+	return mPosX;
+}
+
+float Ball::getPosY() {
+	return mPosY;
+}
+
+float Ball::getBallCenterX() {
+	return mPosX + BALL_WIDTH / 2;
+}
+
+float Ball::getBallCenterY() {
+	return mPosY + BALL_HEIGHT / 2;
+}
+
+SDL_Rect Ball::get_Rect() {
+	return mBall;
+}
+
+bool Ball::win() {
+	bool win = false;
+
+	if (SDL_sqrt(pow(getBallCenterX() - getHoleCenterX(), 2) + pow(getBallCenterY() - getHoleCenterY(), 2)) <= abs(HOLE_WIDTH - BALL_WIDTH) / 2) {
+		mVelX = 0;
+		mVelY = 0;
+		mPosX = getHoleX() + 5;
+		mPosY = getHoleY() + 5;
+		std::cout << "You won!";
+		win = true;
+		//level++ reset pos de het loop
+	}
+	return win;
+}
+
 bool Ball::Inside()
 {
 	bool inside = true;
