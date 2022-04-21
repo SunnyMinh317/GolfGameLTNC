@@ -1,3 +1,0 @@
-D:\GolfGameLTNC\GolfGameLTNC\x64\Debug\GolfGameLTNC.exe
-C:\Users\W10E\source\repos\GolfGameLTNC\GolfGameLTNC\x64\Debug\GolfGameLTNC.exe
-C:\Users\HP\Desktop\CodingProject\GolfGameLTNC\x64\Debug\GolfGameLTNC.exe
