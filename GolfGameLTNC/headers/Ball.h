@@ -1,6 +1,7 @@
 #pragma once
 #include <iostream>
 #include <iomanip>
+#include <SDL_mixer.h>
 #include "Hole.h"
 
 
@@ -75,12 +76,12 @@ public:
 			mVelY = 0;
 			mPosX = getHoleX() + 5;
 			mPosY = getHoleY() + 5;
-			std::cout << "You won!";
 			win = true;
-			//level++ reset pos de het loop
 		}
 		return win;
 	}
+
+	int getHitCount();
 
 	friend class Hole;
 private:
@@ -90,6 +91,6 @@ private:
 	float mPosX, mPosY;
 	float mVelX, mVelY;
 	float friction = 500;
-
+	int hitCount = 0;
 	SDL_Rect mBall;
 };

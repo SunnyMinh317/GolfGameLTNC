@@ -1,6 +1,7 @@
-#include<SDL.h>
-#include<SDL_image.h>
-#include"headers\Ball.h"
+#include <SDL.h>
+#include <SDL_mixer.h>
+#include <SDL_image.h>
+#include "headers\Ball.h"
 
 Ball::Ball()
 {
@@ -46,6 +47,9 @@ void Ball::handleEvent(SDL_Event& e)
 		}
 		if (e.type == SDL_MOUSEBUTTONUP && mVelX == 0 && mVelY == 0)
 		{
+			hitCount++;
+			Mix_Chunk *gSFXGolfHit = Mix_LoadWAV("music/golfPut.wav");
+			Mix_PlayChannel(-1, gSFXGolfHit, 0);
 			pressed = false;
 			std::cout << getHoleCenterX() << " " << getHoleCenterY() << std::endl;
 
@@ -114,4 +118,8 @@ void Ball::move(float timeStep)
 		mVelY = 0;
 	}
 
+}
+
+int Ball::getHitCount() {
+	return hitCount;
 }

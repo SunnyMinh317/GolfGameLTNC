@@ -105,14 +105,14 @@ bool LTexture::loadFromFile(std::string path)
 	return mTexture != NULL;
 }
 
-#if defined(SDL_TTF_MAJOR_VERSION)
-bool LTexture::loadFromRenderedText(std::string textureText, SDL_Color textColor)
+//#if defined(SDL_TTF_MAJOR_VERSION)
+bool LTexture::loadFromRenderedText(std::string textureText, SDL_Color textColor, TTF_Font *gFont)
 {
 	//Get rid of preexisting texture
 	free();
 
 	//Render text surface
-	SDL_Surface* textSurface = TTF_RenderText_Solid(gFont, textureText.c_str(), textColor);
+	SDL_Surface* textSurface = TTF_RenderText_Blended(gFont, textureText.c_str(), textColor);
 	if (textSurface != NULL)
 	{
 		//Create texture from surface pixels
@@ -140,7 +140,7 @@ bool LTexture::loadFromRenderedText(std::string textureText, SDL_Color textColor
 	//Return success
 	return mTexture != NULL;
 }
-#endif
+//#endif
 
 bool LTexture::createBlank(int width, int height, SDL_TextureAccess access)
 {
