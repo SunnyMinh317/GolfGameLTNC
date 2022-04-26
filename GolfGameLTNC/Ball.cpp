@@ -121,11 +121,55 @@ void Ball::handleEvent(SDL_Event& e)
 
 
 
-void Ball::move(float timeStep)
+void Ball::move(float timeStep, SDL_Rect wall[], int n)
 {
+	mBall = { (int)mPosX,(int)mPosY,BALL_WIDTH,BALL_WIDTH };
 	if (abs(mVelX) > 0.5 && abs(mVelY) > 0.5) {
 		float ax = friction * abs(mVelX / SDL_sqrt(mVelX * mVelX + mVelY * mVelY));
 		float ay = friction * abs(mVelY / SDL_sqrt(mVelX * mVelX + mVelY * mVelY));
+
+		if (n!=0)
+		{
+			for (int i = 0; i < n; i++)
+			{
+				if (SDL_HasIntersection(&wall[i], &mBall)) {
+					int leftB;
+					int rightB;
+					int topB;
+					int bottomB;
+
+					leftB = wall[i].x;
+					rightB = wall[i].x + wall[i].w;
+					topB = wall[i].y;
+					bottomB = wall[i].y + wall[i].h;
+
+					if (mPosY + BALL_HEIGHT >= topB && mPosY < topB)
+					{
+						mPosY = topB;
+						mVelY = -mVelY;
+					}
+
+					else if (mPosY <= bottomB && mPosY + BALL_HEIGHT > bottomB)
+					{
+						mPosY = bottomB;
+						mVelY = -mVelY;
+					}
+
+					if (mPosX + BALL_WIDTH >= leftB && mPosX < leftB)
+					{
+						mPosX = leftB;
+						mVelX = -mVelX;
+					}
+
+					else if (mPosX <= rightB && mPosX + BALL_WIDTH > rightB)
+					{
+						mPosX = rightB;
+						mVelX = -mVelX;
+					}
+				}
+			}
+		}
+
 		//Move the Ball left or right
 		mPosX += mVelX * timeStep;
 

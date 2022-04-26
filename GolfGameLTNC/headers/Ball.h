@@ -26,7 +26,7 @@ public:
 	void handleEvent(SDL_Event& e);
 
 	//Moves the Ball
-	void move(float timeStep);
+	void move(float timeStep, SDL_Rect wall[], int n);
 	bool Inside();
 
 	void setInitPos(float x, float y);

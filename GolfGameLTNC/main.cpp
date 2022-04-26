@@ -44,13 +44,14 @@ LTexture gLevelNumber;
 
 
 int level = 0;
-
+int n = 0;
 bool quit = true;
 Ball ball;
 Hole hole;
 SDL_Event event;
 LTimer stepTimer;
 Tile* tileSet[TOTAL_TILES];
+SDL_Rect bounce[TOTAL_TILES];
 int state = 0; //0 = titleScreen, 1 = transition, 2 = game, 3 = endScreen
 SDL_Color black = { 0,0,0 };
 SDL_Color white = { 0xFF,0xFF,0xFF };
@@ -198,8 +199,11 @@ bool loadMedia()
 	return success;
 }
 
+
+
 void loadLevel(int level)
 {
+	n = 0;
 	std::cout << level << "level" << std::endl;
 	if (level > 1)
 	{
@@ -212,12 +216,31 @@ void loadLevel(int level)
 	case 0:
 		ball.setNewPos(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2);
 		setTiles(tileSet, "headers/tile.map");
+		for (int i = 0; i < TOTAL_TILES; ++i)
+		{
+			//If the tile is a wall type tile
+			if ((tileSet[i]->getType() >= TILE_LIGHT) && (tileSet[i]->getType() <= TILE_DARK))
+			{
+				bounce[n] = tileSet[i]->getBox();
+				n++;
+			}
+		}
 		break;
 	case 1:
 		ball.setNewPos(SCREEN_WIDTH / 2+200, SCREEN_HEIGHT / 2+200);
 		setTiles(tileSet, "headers/tile2.map");
+		for (int i = 0; i < TOTAL_TILES; ++i)
+		{
+			//If the tile is a wall type tile
+			if ((tileSet[i]->getType() >= TILE_LIGHT) && (tileSet[i]->getType() <= TILE_DARK))
+			{
+				bounce[n] = tileSet[i]->getBox();
+				n++;
+			}
+		}
 		break;
 	}	
+
 
 }
 
@@ -234,7 +257,7 @@ void update()
 	}
 	
 	float timeStep = stepTimer.getTicks() / 1000.f;
-	ball.move(timeStep);
+	ball.move(timeStep, bounce, n);
 	stepTimer.start();
 	if (ball.win()) {
 		Mix_PlayChannel(-1, gSFXHole, 0);
@@ -428,7 +451,6 @@ int main(int argc, char* args[])
 			}
 		}
 	}
-
 	//Free resources and close SDL
 	close();
 
