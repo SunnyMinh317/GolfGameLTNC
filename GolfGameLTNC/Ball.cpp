@@ -25,6 +25,10 @@ void Ball::setNewPos(float x, float y) {
 	mPosY = y;
 }
 
+void Ball::resetcount() {
+	hitCount = 0;
+}
+
 float Ball::getDegree() {
 	return degree;
 }

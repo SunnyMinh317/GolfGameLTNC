@@ -33,6 +33,8 @@ public:
 
 	void setNewPos(float x, float y);
 
+	void resetcount();
+
 	float getDegree();
 
 	bool getPoint();

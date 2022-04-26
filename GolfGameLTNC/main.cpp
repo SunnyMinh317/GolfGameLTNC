@@ -44,7 +44,6 @@ LTexture gLevelNumber;
 
 
 int level = 0;
-//std::vector<Tile> tiles = loadTiles(level);
 
 bool quit = true;
 Ball ball;
@@ -55,6 +54,9 @@ Tile* tileSet[TOTAL_TILES];
 int state = 0; //0 = titleScreen, 1 = transition, 2 = game, 3 = endScreen
 SDL_Color black = { 0,0,0 };
 SDL_Color white = { 0xFF,0xFF,0xFF };
+
+TTF_Font* gPlayFont = TTF_OpenFont("fonts/pixelFont.ttf", 20);
+TTF_Font* gTitleFont = TTF_OpenFont("fonts/pixelFont.ttf", 40);
 
 bool init();
 bool loadMedia();
@@ -131,9 +133,10 @@ bool init()
 
 bool loadMedia()
 {
-
-	TTF_Font* gTitleFont = TTF_OpenFont("fonts/pixelFont.ttf", 40);
-	TTF_Font* gPlayFont = TTF_OpenFont("fonts/pixelFont.ttf", 20);
+	TTF_CloseFont(gPlayFont);
+	TTF_CloseFont(gTitleFont);
+	gPlayFont = TTF_OpenFont("fonts/pixelFont.ttf", 20);
+	gTitleFont = TTF_OpenFont("fonts/pixelFont.ttf", 40);
 	bool success = true;
 	gPointTexture.addRenderer(gRenderer);
 	gBallTexture.addRenderer(gRenderer);
@@ -316,7 +319,8 @@ void transitionScreen() {
 }
 
 void endScreen() {
-	TTF_Font* gPlayFont = TTF_OpenFont("fonts/pixelFont.ttf", 25);
+	TTF_CloseFont(gPlayFont);
+	gPlayFont = TTF_OpenFont("fonts/pixelFont.ttf", 25);
 	std::string stringHitCount = "FINAL SCORE: " + std::to_string(ball.getHitCount());
 	gHitCount.loadFromRenderedText(stringHitCount, black, gPlayFont);
 	
@@ -336,6 +340,7 @@ void endScreen() {
 			Mix_PlayChannel(-1, gSFXHole, 0);
 			level = 0;
 			state = 1;
+			ball.resetcount();
 		}
 	}
 
@@ -344,11 +349,11 @@ void endScreen() {
 
 void renderHitCount() {
 	//TTF_Font* gTitleFont = TTF_OpenFont("fonts/pixelFont.ttf", 40);
-	TTF_Font* gPlayFont = TTF_OpenFont("fonts/pixelFont.ttf", 20);
+	TTF_CloseFont(gPlayFont);
+	gPlayFont = TTF_OpenFont("fonts/pixelFont.ttf", 20);
 	std::string stringHitCount = "HIT COUNT: " + std::to_string(ball.getHitCount());
 	gHitCount.loadFromRenderedText(stringHitCount, black, gPlayFont);
 	gHitCount.render(10, 10);
-	SDL_RenderPresent(gRenderer);
 }
 
 
