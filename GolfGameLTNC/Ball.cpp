@@ -90,7 +90,7 @@ void Ball::handleEvent(SDL_Event& e)
 {
 	spoint = false;
 	if (mVelX == 0 && mVelY == 0) {
-		if (e.type == SDL_MOUSEBUTTONDOWN && mVelX == 0 && mVelY == 0)
+		if (e.type == SDL_MOUSEBUTTONDOWN )
 		{
 			pressed = true;
 			int x;
@@ -102,10 +102,10 @@ void Ball::handleEvent(SDL_Event& e)
 			spoint = true;
 			degree = SDL_atan2(-e.button.y + InitY, -e.button.x + InitX) * (180 / 3.1415) + 90;
 		}
-		if (e.type == SDL_MOUSEBUTTONUP && mVelX == 0 && mVelY == 0)
+		if (e.type == SDL_MOUSEBUTTONUP )
 		{
 			hitCount++;
-			Mix_Chunk *gSFXGolfHit = Mix_LoadWAV("music/golfPut.wav");
+			Mix_Chunk* gSFXGolfHit = Mix_LoadWAV("music/golfPut.wav");
 			Mix_PlayChannel(-1, gSFXGolfHit, 0);
 			pressed = false;
 			std::cout << getHoleCenterX() << " " << getHoleCenterY() << std::endl;
@@ -119,7 +119,21 @@ void Ball::handleEvent(SDL_Event& e)
 	}
 }
 
-
+SDL_Rect Ball::closest(SDL_Rect ball, SDL_Rect tiles[], int n) {
+	SDL_Rect ans = tiles[0];
+	float min = SDL_sqrt(((ans.x + ans.w / 2) - (ball.x + ball.w / 2)) * ((ans.x + ans.w / 2) - (ball.x + ball.w / 2)) + ((ans.y + ans.h / 2) - (ball.y + ball.h / 2)) * ((ans.y + ans.h / 2) - (ball.y + ball.h / 2)));
+	for (int i = 1; i < n; i++) {
+		float x1 = tiles[i].x + tiles[i].w / 2;
+		float x2 = ball.x + ball.w / 2;
+		float y1 = tiles[i].y + tiles[i].h / 2;
+		float y2 = ball.y + ball.h / 2;
+		if (SDL_sqrt((x1 - x2) * (x1 - x2) + (y1 - y2) * (y1 - y2)) < min) {
+			min = SDL_sqrt((x1 - x2) * (x1 - x2) + (y1 - y2) * (y1 - y2));
+			ans = tiles[i];
+		}
+	}
+	return ans;
+}
 
 void Ball::move(float timeStep, SDL_Rect wall[], int n)
 {
@@ -127,48 +141,7 @@ void Ball::move(float timeStep, SDL_Rect wall[], int n)
 	if (abs(mVelX) > 0.5 && abs(mVelY) > 0.5) {
 		float ax = friction * abs(mVelX / SDL_sqrt(mVelX * mVelX + mVelY * mVelY));
 		float ay = friction * abs(mVelY / SDL_sqrt(mVelX * mVelX + mVelY * mVelY));
-
-		if (n!=0)
-		{
-			for (int i = 0; i < n; i++)
-			{
-				if (SDL_HasIntersection(&wall[i], &mBall)) {
-					int leftB;
-					int rightB;
-					int topB;
-					int bottomB;
-
-					leftB = wall[i].x;
-					rightB = wall[i].x + wall[i].w;
-					topB = wall[i].y;
-					bottomB = wall[i].y + wall[i].h;
-
-					if (mPosY + BALL_HEIGHT >= topB && mPosY < topB)
-					{
-						mPosY = topB;
-						mVelY = -mVelY;
-					}
-
-					else if (mPosY <= bottomB && mPosY + BALL_HEIGHT > bottomB)
-					{
-						mPosY = bottomB;
-						mVelY = -mVelY;
-					}
-
-					if (mPosX + BALL_WIDTH >= leftB && mPosX < leftB)
-					{
-						mPosX = leftB;
-						mVelX = -mVelX;
-					}
-
-					else if (mPosX <= rightB && mPosX + BALL_WIDTH > rightB)
-					{
-						mPosX = rightB;
-						mVelX = -mVelX;
-					}
-				}
-			}
-		}
+		
 
 		//Move the Ball left or right
 		mPosX += mVelX * timeStep;
@@ -212,6 +185,27 @@ void Ball::move(float timeStep, SDL_Rect wall[], int n)
 		}
 		else if (mVelY < 0) {
 			mVelY += ay * timeStep;
+		}
+
+		if (n != 0)
+		{
+			SDL_Rect clos = closest(mBall, wall, n);
+
+			mBall.x = mPosX + mVelX * timeStep;
+			mBall.y = mPosY;
+
+			if (SDL_HasIntersection(&clos, &mBall))
+			{
+				mVelX = -mVelX;
+			}
+
+			mBall.x = mPosX;
+			mBall.y = mPosY + mVelY * timeStep;
+
+			if (SDL_HasIntersection(&clos, &mBall))
+			{
+				mVelY = -mVelY;
+			}
 		}
 	}
 	else {

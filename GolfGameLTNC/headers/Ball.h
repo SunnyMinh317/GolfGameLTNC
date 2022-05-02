@@ -47,6 +47,7 @@ public:
 
 	float getBallCenterY();
 	SDL_Rect get_Rect();
+	SDL_Rect closest(SDL_Rect ball, SDL_Rect tiles[], int n);
 
 	bool win();
 

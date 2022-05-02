@@ -240,7 +240,7 @@ void loadLevel(int level)
 		}
 		break;
 	}	
-
+	 
 
 }
 
@@ -255,7 +255,6 @@ void update()
 		ball.handleEvent(event);
 		
 	}
-	
 	float timeStep = stepTimer.getTicks() / 1000.f;
 	ball.move(timeStep, bounce, n);
 	stepTimer.start();
@@ -337,8 +336,8 @@ void transitionScreen() {
 		MenuScreenBG.render(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 		renderTransition();
 		SDL_Delay(1000);
-		state++;
 	}
+	state++;
 }
 
 void endScreen() {
@@ -391,8 +390,8 @@ void game()
 	}
 	else if (state==2)
 	{
-		update();
 		graphics();
+		update();
 	}
 	else if (state == 3) {
 		endScreen();
