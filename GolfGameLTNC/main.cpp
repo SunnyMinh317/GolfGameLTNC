@@ -215,30 +215,30 @@ void loadLevel(int level)
 	{
 	case 0:
 		ball.setNewPos(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2);
-		setTiles(tileSet, "headers/layer1.csv");
-		setTiles(tileSet1, "headers/layer2.csv");
-		setTiles(tileSet2, "headers/layer3.csv");
+		setTiles(tileSet, "headers/layer_background.csv");
+		setTiles(tileSet1, "headers/layer_terrain.csv");
+		setTiles(tileSet2, "headers/layer_obstacle1.csv");
 		for (int i = 0; i < TOTAL_TILES; ++i)
 		{
 			//If the tile is a wall type tile
-			if ((tileSet1[i]->getType() >= TILE_GREENROCK1) && (tileSet1[i]->getType() <= TILE_GREENWOOD))
+			if ((tileSet2[i]->getType() >= TILE_GREENROCK1) && (tileSet2[i]->getType() <= TILE_GREENWOOD) || (tileSet2[i]->getType() >= TILE_SANDROCK1) && (tileSet2[i]->getType() <= TILE_SANDWOOD) || (tileSet2[i]->getType() >= TILE_WATERROCK1) && (tileSet2[i]->getType() <= TILE_WATERWOOD))
 			{
-				bounce[n] = tileSet1[i]->getBox();
+				bounce[n] = tileSet2[i]->getBox();
 				n++;
 			}
 		}
 		break;
 	case 1:
 		ball.setNewPos(SCREEN_WIDTH / 2+200, SCREEN_HEIGHT / 2+200);
-		setTiles(tileSet, "headers/layer1.csv");
-		setTiles(tileSet1, "headers/layer2.2.csv");
-		setTiles(tileSet2, "headers/layer3.csv");
+		setTiles(tileSet, "headers/layer_background.csv");
+		setTiles(tileSet1, "headers/layer_terrain.csv");
+		setTiles(tileSet2, "headers/layer_obstacle2.csv");
 		for (int i = 0; i < TOTAL_TILES; ++i)
 		{
 			//If the tile is a wall type tile
-			if ((tileSet[i]->getType() >= TILE_GREENTOPLEFT) && (tileSet[i]->getType() <= TILE_WATERWOOD))
+			if ((tileSet2[i]->getType() >= TILE_GREENROCK1) && (tileSet2[i]->getType() <= TILE_GREENWOOD) || (tileSet2[i]->getType() >= TILE_SANDROCK1) && (tileSet2[i]->getType() <= TILE_SANDWOOD) || (tileSet2[i]->getType() >= TILE_WATERROCK1) && (tileSet2[i]->getType() <= TILE_WATERWOOD))
 			{
-				bounce[n] = tileSet[i]->getBox();
+				bounce[n] = tileSet2[i]->getBox();
 				n++;
 			}
 		}
