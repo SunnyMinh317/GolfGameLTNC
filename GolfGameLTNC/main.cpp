@@ -50,7 +50,7 @@ Ball ball;
 Hole hole;
 SDL_Event event;
 LTimer stepTimer;
-Tile* tileSet[TOTAL_TILES];
+Tile* tileSet[TOTAL_TILES], * tileSet1[TOTAL_TILES], * tileSet2[TOTAL_TILES];
 SDL_Rect bounce[TOTAL_TILES];
 int state = 0; //0 = titleScreen, 1 = transition, 2 = game, 3 = endScreen
 SDL_Color black = { 0,0,0 };
@@ -170,7 +170,7 @@ bool loadMedia()
 		printf("Failed to load Hole texture!\n");
 		success = false;
 	}
-	if (!gTileTexture.loadFromFile("pictures/tileset/tilemap.png"))
+	if (!gTileTexture.loadFromFile("pictures/tileset/tilesetx.png"))
 	{
 		printf("Failed to load Hole texture!\n");
 		success = false;
@@ -215,24 +215,28 @@ void loadLevel(int level)
 	{
 	case 0:
 		ball.setNewPos(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2);
-		setTiles(tileSet, "headers/tile.map");
+		setTiles(tileSet, "headers/layer1.csv");
+		setTiles(tileSet1, "headers/layer2.csv");
+		setTiles(tileSet2, "headers/layer3.csv");
 		for (int i = 0; i < TOTAL_TILES; ++i)
 		{
 			//If the tile is a wall type tile
-			if ((tileSet[i]->getType() >= TILE_LIGHT) && (tileSet[i]->getType() <= TILE_DARK))
+			if ((tileSet1[i]->getType() >= TILE_GREENROCK1) && (tileSet1[i]->getType() <= TILE_GREENWOOD))
 			{
-				bounce[n] = tileSet[i]->getBox();
+				bounce[n] = tileSet1[i]->getBox();
 				n++;
 			}
 		}
 		break;
 	case 1:
 		ball.setNewPos(SCREEN_WIDTH / 2+200, SCREEN_HEIGHT / 2+200);
-		setTiles(tileSet, "headers/tile2.map");
+		setTiles(tileSet, "headers/layer1.csv");
+		setTiles(tileSet1, "headers/layer2.2.csv");
+		setTiles(tileSet2, "headers/layer3.csv");
 		for (int i = 0; i < TOTAL_TILES; ++i)
 		{
 			//If the tile is a wall type tile
-			if ((tileSet[i]->getType() >= TILE_LIGHT) && (tileSet[i]->getType() <= TILE_DARK))
+			if ((tileSet[i]->getType() >= TILE_GREENTOPLEFT) && (tileSet[i]->getType() <= TILE_WATERWOOD))
 			{
 				bounce[n] = tileSet[i]->getBox();
 				n++;
@@ -278,6 +282,8 @@ void graphics()
 	for (int i = 0; i < TOTAL_TILES; ++i)
 	{
 		tileSet[i]->render();
+		tileSet1[i]->render();
+		tileSet2[i]->render();
 	}
 
 	gHoleTexture.render((int)hole.getHoleX(), (int)hole.getHoleY(), hole.HOLE_WIDTH, hole.HOLE_HEIGHT);
@@ -333,10 +339,11 @@ void transitionScreen() {
 		if (event.type == SDL_QUIT) {
 			quit = true;
 		}
-		MenuScreenBG.render(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
-		renderTransition();
-		SDL_Delay(1000);
+		
 	}
+	MenuScreenBG.render(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+	renderTransition();
+	SDL_Delay(1000);
 	state++;
 }
 
