@@ -98,11 +98,11 @@ void Ball::handleEvent(SDL_Event& e)
 			SDL_GetMouseState(&x, &y);
 			setInitPos(x, y);
 		}
-		if (e.type == SDL_MOUSEMOTION) {
+		if (e.type == SDL_MOUSEMOTION && pressed==true) {
 			spoint = true;
 			degree = SDL_atan2(-e.button.y + InitY, -e.button.x + InitX) * (180 / 3.1415) + 90;
 		}
-		if (e.type == SDL_MOUSEBUTTONUP )
+		if (e.type == SDL_MOUSEBUTTONUP && pressed==true)
 		{
 			hitCount++;
 			Mix_Chunk* gSFXGolfHit = Mix_LoadWAV("music/golfPut.wav");

@@ -1,4 +1,4 @@
-/*This source code copyrighted by Lazy Foo' Productions (2004-2022)
+﻿/*This source code copyrighted by Lazy Foo' Productions (2004-2022)
 and may not be redistributed without written permission.*/
 
 //Using SDL, SDL_image, standard IO, and, strings
@@ -25,6 +25,7 @@ Mix_Chunk* gSFXPressPlay = NULL;
 Mix_Chunk* gSFXHole = NULL;
 Mix_Chunk* gSFXLevelUp = NULL;
 
+LTexture gMouseTexture;
 LTexture gTileTexture;
 LTexture gBallTexture;
 LTexture gHoleTexture;
@@ -41,11 +42,13 @@ LTexture gLevelNumber;
 #include "headers/Ball.h"
 #include "headers/Hole.h"
 #include "headers/Tile.h"
+#include "headers/Mouse.h"
 
 
 int level = 0;
 int n = 0;
 bool quit = true;
+Mouse mouse;
 Ball ball;
 Hole hole;
 SDL_Event event;
@@ -139,6 +142,7 @@ bool loadMedia()
 	gPlayFont = TTF_OpenFont("fonts/pixelFont.ttf", 20);
 	gTitleFont = TTF_OpenFont("fonts/pixelFont.ttf", 40);
 	bool success = true;
+	gMouseTexture.addRenderer(gRenderer);
 	gPointTexture.addRenderer(gRenderer);
 	gBallTexture.addRenderer(gRenderer);
 	gGlowTexture.addRenderer(gRenderer);
@@ -151,6 +155,10 @@ bool loadMedia()
 	gEndScreenTitle.addRenderer(gRenderer);
 	gEndScreenPlayAgain.addRenderer(gRenderer);
 	gLevelNumber.addRenderer(gRenderer);
+	if (!gMouseTexture.loadFromFile("pictures/tileset/68304.png")) {
+		printf("Failed to load Mouse texture!\n");
+		success = false;
+	}
 	if (!gPointTexture.loadFromFile("pictures/point.png"))
 	{
 		printf("Failed to load Point texture!\n");
@@ -217,7 +225,7 @@ void loadLevel(int level)
 		ball.setNewPos(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2);
 		setTiles(tileSet, "headers/layer_background.csv");
 		setTiles(tileSet1, "headers/layer_terrain.csv");
-		setTiles(tileSet2, "headers/layer_obstacle1.csv");
+		setTiles(tileSet2, "headers/layer_obstacle.csv");
 		for (int i = 0; i < TOTAL_TILES; ++i)
 		{
 			//If the tile is a wall type tile
@@ -258,7 +266,9 @@ void update()
 		}
 		ball.handleEvent(event);
 		
+		
 	}
+	mouse.handleEvent();
 	float timeStep = stepTimer.getTicks() / 1000.f;
 	ball.move(timeStep, bounce, n);
 	stepTimer.start();
@@ -296,6 +306,8 @@ void graphics()
 
 	//gHitCount.render(100, 100);
 	renderHitCount();
+
+	gMouseTexture.render(mouse.getPosX(), mouse.getPosY(), mouse.MOUSE_WIDTH, mouse.MOUSE_HEIGHT);
 
 	//Update screen
 	SDL_RenderPresent(gRenderer);
@@ -388,6 +400,7 @@ void renderHitCount() {
 
 void game()
 {
+	SDL_ShowCursor(false);
 	if (state == 0)
 	{
 		titleScreen();
