@@ -43,11 +43,13 @@ LTexture gLevelNumber;
 #include "headers/Hole.h"
 #include "headers/Tile.h"
 #include "headers/Mouse.h"
+#include "headers/Scoreboard.h"
 
 
 int level = 0;
-int n = 0;
+int n = 0,add=0;
 bool quit = true;
+Scores* scores;
 Mouse mouse;
 Ball ball;
 Hole hole;
@@ -73,6 +75,7 @@ void titleScreen();
 void transitionScreen();
 void renderTransition();
 void endScreen();
+void highScore();
 void renderHitCount();
 
 bool init()
@@ -359,6 +362,24 @@ void transitionScreen() {
 	state++;
 }
 
+void highScore() {
+	scores->topscores(&scores);
+	if (add==0) scores->insertsort(&scores, ball.getHitCount());
+	scores->save();
+	int board[5];
+	for (int i = 0; i < 5; i++)
+		board[i] = scores->getScore(i);
+	for (int i = 0; i < scores->count() && i<5; i++){
+		TTF_CloseFont(gPlayFont);
+		gPlayFont = TTF_OpenFont("fonts/pixelFont.ttf", 25);
+		std::string stringHitCount = std::to_string(1 + i) + ". . . . . . . ." + std::to_string(board[i]);
+		gHitCount.loadFromRenderedText(stringHitCount, black, gPlayFont);
+		gHitCount.render(230, 160 + i * 30);
+	}
+	scores->deletelist(&scores);
+	add++;
+}
+
 void endScreen() {
 	TTF_CloseFont(gPlayFont);
 	gPlayFont = TTF_OpenFont("fonts/pixelFont.ttf", 25);
@@ -366,13 +387,16 @@ void endScreen() {
 	gHitCount.loadFromRenderedText(stringHitCount, black, gPlayFont);
 	
 	MenuScreenBG.render(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
-	gEndScreenTitle.render(200, 150);
-	gEndScreenPlayAgain.render(100, 320);
-	gHitCount.render(190, 250);
+	gEndScreenTitle.render(200, 50);
+	gEndScreenPlayAgain.render(100, 340);
+	gHitCount.render(190, 120);
+	highScore();
+
 	SDL_RenderPresent(gRenderer);
 	while (SDL_PollEvent(&event))
 	{
 		if (event.type == SDL_QUIT) {
+			
 			quit = true;
 		}
 		
@@ -381,9 +405,16 @@ void endScreen() {
 			Mix_PlayChannel(-1, gSFXHole, 0);
 			level = 0;
 			state = 1;
+			add = 0;
 			ball.resetcount();
+			if (event.key.keysym.sym == SDLK_DELETE) {
+				scores->save(); // reset scoreboard
+			}
 		}
+
+
 	}
+	
 
 	return;
 }
