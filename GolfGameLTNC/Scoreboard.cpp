@@ -60,7 +60,7 @@ void Scores::insertsort(Scores** head, int data) {
 
 int Scores::getScore(int n) {
 	Scores* head = this;
-	int i = 0, ans;
+	int i = 0, ans=-1;
 	while (head != NULL && i <=n) {
 		ans = head->data;
 		head = head->next;

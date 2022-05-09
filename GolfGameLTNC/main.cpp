@@ -368,13 +368,23 @@ void highScore() {
 	scores->save();
 	int board[5];
 	for (int i = 0; i < 5; i++)
-		board[i] = scores->getScore(i);
-	for (int i = 0; i < scores->count() && i<5; i++){
+		if(scores->getScore(i)!=-1)
+			board[i] = scores->getScore(i);
+	if (scores->count() > 0) {
+		for (int i = 0; i < scores->count() && i < 5; i++) {
+			TTF_CloseFont(gPlayFont);
+			gPlayFont = TTF_OpenFont("fonts/pixelFont.ttf", 25);
+			std::string stringHitCount = std::to_string(1 + i) + ". . . . . . . ." + std::to_string(board[i]);
+			gHitCount.loadFromRenderedText(stringHitCount, black, gPlayFont);
+			gHitCount.render(230, 160 + i * 30);
+		}
+	}
+	else {
 		TTF_CloseFont(gPlayFont);
 		gPlayFont = TTF_OpenFont("fonts/pixelFont.ttf", 25);
-		std::string stringHitCount = std::to_string(1 + i) + ". . . . . . . ." + std::to_string(board[i]);
+		std::string stringHitCount = "NO RECORDS";
 		gHitCount.loadFromRenderedText(stringHitCount, black, gPlayFont);
-		gHitCount.render(230, 160 + i * 30);
+		gHitCount.render(220, 160);
 	}
 	scores->deletelist(&scores);
 	add++;
@@ -402,12 +412,14 @@ void endScreen() {
 		
 		
 		if (event.type == SDL_KEYDOWN) {
-			Mix_PlayChannel(-1, gSFXHole, 0);
-			level = 0;
-			state = 1;
-			add = 0;
-			ball.resetcount();
-			if (event.key.keysym.sym == SDLK_DELETE) {
+			if (event.key.keysym.sym != SDLK_DELETE){
+				Mix_PlayChannel(-1, gSFXHole, 0);
+				level = 0;
+				state = 1;
+				add = 0;
+				ball.resetcount();
+			}
+			else if (event.key.keysym.sym == SDLK_DELETE) {
 				scores->save(); // reset scoreboard
 			}
 		}
