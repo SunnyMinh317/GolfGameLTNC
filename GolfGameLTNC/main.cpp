@@ -53,6 +53,9 @@ Scores* scores;
 Mouse mouse;
 Ball ball;
 Hole hole;
+
+Tile tile;
+
 SDL_Event event;
 LTimer stepTimer;
 Tile* tileSet[TOTAL_TILES], * tileSet1[TOTAL_TILES], * tileSet2[TOTAL_TILES];
@@ -226,9 +229,9 @@ void loadLevel(int level)
 	{
 	case 0:
 		ball.setNewPos(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2);
-		setTiles(tileSet, "headers/layer_background.csv");
-		setTiles(tileSet1, "headers/layer_terrain.csv");
-		setTiles(tileSet2, "headers/layer_obstacle.csv");
+		tile.setTiles(tileSet, "headers/layer_background.csv");
+		tile.setTiles(tileSet1, "headers/layer_terrain.csv");
+		tile.setTiles(tileSet2, "headers/layer_obstacle.csv");
 		for (int i = 0; i < TOTAL_TILES; ++i)
 		{
 			//If the tile is a wall type tile
@@ -241,9 +244,9 @@ void loadLevel(int level)
 		break;
 	case 1:
 		ball.setNewPos(SCREEN_WIDTH / 2+200, SCREEN_HEIGHT / 2+200);
-		setTiles(tileSet, "headers/layer_background.csv");
-		setTiles(tileSet1, "headers/layer_terrain.csv");
-		setTiles(tileSet2, "headers/layer_obstacle2.csv");
+		tile.setTiles(tileSet, "headers/layer_background.csv");
+		tile.setTiles(tileSet1, "headers/layer_terrain.csv");
+		tile.setTiles(tileSet2, "headers/layer_obstacle2.csv");
 		for (int i = 0; i < TOTAL_TILES; ++i)
 		{
 			//If the tile is a wall type tile
