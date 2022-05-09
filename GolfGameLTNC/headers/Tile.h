@@ -1,4 +1,5 @@
 #pragma once
+#pragma once
 #include <SDL_rect.h>
 #include <fstream>
 #include <string>
@@ -7,7 +8,7 @@
 //Tile constants
 const int TILE_WIDTH = 32;
 const int TILE_HEIGHT = 32;
-const int TOTAL_TILES = 20 * 15; //20x15
+const int TOTAL_TILES = 20 * 15; //40x30
 const int TOTAL_TILE_SPRITES = 55; //6x9
 
 //Tile sprites & tile type
@@ -74,6 +75,8 @@ const int TILE_WATERROCK1 = 51;
 const int TILE_WATERROCK2 = 52;
 const int TILE_WATERWOOD = 53;
 
+
+
 class Tile
 {
 public:
@@ -88,12 +91,12 @@ public:
 	//Get tile type
 	int getType();
 
-	bool setTiles(Tile* tiles[], std::string s);
-
 	//Get collision box
 	SDL_Rect getBox();
 
-	SDL_Rect gTileClips[TOTAL_TILE_SPRITES];
+	SDL_Rect* getpBox();
+
+	bool setTiles(SDL_Rect TileClips[],Tile* tiles[], std::string s);
 
 private:
 	//Tile attributes
@@ -102,4 +105,3 @@ private:
 	//Tile Type
 	int mType;
 };
-

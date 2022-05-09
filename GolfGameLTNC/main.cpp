@@ -20,7 +20,7 @@ SDL_Renderer* gRenderer = NULL;
 #include "headers/Texture.h"
 #include "headers/Timer.h"
 
-Mix_Music* gSFXBGMusic=NULL;
+Mix_Music* gSFXBGMusic = NULL;
 Mix_Chunk* gSFXPressPlay = NULL;
 Mix_Chunk* gSFXHole = NULL;
 Mix_Chunk* gSFXLevelUp = NULL;
@@ -45,20 +45,18 @@ LTexture gLevelNumber;
 #include "headers/Mouse.h"
 #include "headers/Scoreboard.h"
 
+SDL_Rect gTileClips[TOTAL_TILE_SPRITES];
 
 int level = 0;
-int n = 0,add=0;
+int n = 0, add = 0;
 bool quit = true;
 Scores* scores;
 Mouse mouse;
 Ball ball;
 Hole hole;
-
-Tile tile;
-
 SDL_Event event;
 LTimer stepTimer;
-Tile* tileSet[TOTAL_TILES], * tileSet1[TOTAL_TILES], * tileSet2[TOTAL_TILES];
+Tile* tileSet[TOTAL_TILES], * tileSet1[TOTAL_TILES], * tileSet2[TOTAL_TILES], tile;
 SDL_Rect bounce[TOTAL_TILES];
 int state = 0; //0 = titleScreen, 1 = transition, 2 = game, 3 = endScreen
 SDL_Color black = { 0,0,0 };
@@ -198,18 +196,18 @@ bool loadMedia()
 		std::cout << "Failed to load lazy font! SDL_ttf Error: %s\n" << TTF_GetError() << std::endl;
 	}
 	else {
-		
+
 		gTitleMenu.loadFromRenderedText("MINI GOLF A++", black, gTitleFont);
 		gPlayMenu.loadFromRenderedText("PRESS ANY KEY TO PLAY!", black, gPlayFont);
 		gEndScreenTitle.loadFromRenderedText("YOU WON!", black, gTitleFont);
 		gEndScreenPlayAgain.loadFromRenderedText("PRESS ANY KEY TO PLAY AGAIN!", black, gPlayFont);
-		
+
 
 	}
 	gSFXBGMusic = Mix_LoadMUS("music/8bitBGMWav.wav");
 	gSFXHole = Mix_LoadWAV("music/InHole.wav");
 	gSFXLevelUp = Mix_LoadWAV("music/levelUp.wav");
-	
+
 	return success;
 }
 
@@ -229,9 +227,9 @@ void loadLevel(int level)
 	{
 	case 0:
 		ball.setNewPos(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2);
-		tile.setTiles(tileSet, "headers/layer_background.csv");
-		tile.setTiles(tileSet1, "headers/layer_terrain.csv");
-		tile.setTiles(tileSet2, "headers/layer_obstacle.csv");
+		tile.setTiles(gTileClips, tileSet, "headers/layer_background.csv");
+		tile.setTiles(gTileClips, tileSet1, "headers/layer_terrain.csv");
+		tile.setTiles(gTileClips, tileSet2, "headers/layer_obstacle.csv");
 		for (int i = 0; i < TOTAL_TILES; ++i)
 		{
 			//If the tile is a wall type tile
@@ -243,10 +241,10 @@ void loadLevel(int level)
 		}
 		break;
 	case 1:
-		ball.setNewPos(SCREEN_WIDTH / 2+200, SCREEN_HEIGHT / 2+200);
-		tile.setTiles(tileSet, "headers/layer_background.csv");
-		tile.setTiles(tileSet1, "headers/layer_terrain.csv");
-		tile.setTiles(tileSet2, "headers/layer_obstacle2.csv");
+		ball.setNewPos(SCREEN_WIDTH / 2 + 200, SCREEN_HEIGHT / 2 + 200);
+		tile.setTiles(gTileClips, tileSet, "headers/layer_background.csv");
+		tile.setTiles(gTileClips, tileSet1, "headers/layer_terrain.csv");
+		tile.setTiles(gTileClips, tileSet2, "headers/layer_obstacle2.csv");
 		for (int i = 0; i < TOTAL_TILES; ++i)
 		{
 			//If the tile is a wall type tile
@@ -257,22 +255,22 @@ void loadLevel(int level)
 			}
 		}
 		break;
-	}	
-	 
+	}
+
 
 }
 
 void update()
 {
-	
+
 	while (SDL_PollEvent(&event))
 	{
-		if (event.type==SDL_QUIT){
+		if (event.type == SDL_QUIT) {
 			quit = true;
 		}
 		ball.handleEvent(event);
-		
-		
+
+
 	}
 	mouse.handleEvent();
 	float timeStep = stepTimer.getTicks() / 1000.f;
@@ -281,10 +279,10 @@ void update()
 	if (ball.win()) {
 		Mix_PlayChannel(-1, gSFXHole, 0);
 		SDL_Delay(1000);
-		
+
 		level++;
 		state = 1;
-		
+
 		loadLevel(level);
 	}
 }
@@ -293,13 +291,13 @@ void graphics()
 {
 	SDL_SetRenderDrawColor(gRenderer, 0x80, 0xC6, 0x72, 0xFF);
 	SDL_RenderClear(gRenderer);
-	
+
 
 	for (int i = 0; i < TOTAL_TILES; ++i)
 	{
-		tileSet[i]->render();
-		tileSet1[i]->render();
-		tileSet2[i]->render();
+		gTileTexture.render(tileSet[i]->getBox().x, tileSet[i]->getBox().y, &gTileClips[tileSet[i]->getType()]);
+		gTileTexture.render(tileSet1[i]->getBox().x, tileSet1[i]->getBox().y, &gTileClips[tileSet1[i]->getType()]);
+		gTileTexture.render(tileSet2[i]->getBox().x, tileSet2[i]->getBox().y, &gTileClips[tileSet2[i]->getType()]);
 	}
 
 	gHoleTexture.render((int)hole.getHoleX(), (int)hole.getHoleY(), hole.HOLE_WIDTH, hole.HOLE_HEIGHT);
@@ -318,7 +316,7 @@ void graphics()
 	//Update screen
 	SDL_RenderPresent(gRenderer);
 
-	
+
 }
 
 void titleScreen() {
@@ -343,7 +341,7 @@ void renderTransition() {
 	Mix_PlayChannel(-1, gSFXLevelUp, 0);
 	SDL_Color black = { 0,0,0 };
 	TTF_Font* gTitleFont = TTF_OpenFont("fonts/pixelFont.ttf", 40);
-	std::string levelNum = std::to_string(level+1);
+	std::string levelNum = std::to_string(level + 1);
 	std::cout << "LEVEL = " << levelNum << std::endl;
 	std::string levelNumRender = "LEVEL " + levelNum;
 	gLevelNumber.loadFromRenderedText(levelNumRender, black, gTitleFont);
@@ -357,7 +355,7 @@ void transitionScreen() {
 		if (event.type == SDL_QUIT) {
 			quit = true;
 		}
-		
+
 	}
 	MenuScreenBG.render(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 	renderTransition();
@@ -367,11 +365,11 @@ void transitionScreen() {
 
 void highScore() {
 	scores->topscores(&scores);
-	if (add==0) scores->insertsort(&scores, ball.getHitCount());
+	if (add == 0) scores->insertsort(&scores, ball.getHitCount());
 	scores->save();
 	int board[5];
 	for (int i = 0; i < 5; i++)
-		if(scores->getScore(i)!=-1)
+		if (scores->getScore(i) != -1)
 			board[i] = scores->getScore(i);
 	if (scores->count() > 0) {
 		for (int i = 0; i < scores->count() && i < 5; i++) {
@@ -398,7 +396,7 @@ void endScreen() {
 	gPlayFont = TTF_OpenFont("fonts/pixelFont.ttf", 25);
 	std::string stringHitCount = "FINAL SCORE: " + std::to_string(ball.getHitCount());
 	gHitCount.loadFromRenderedText(stringHitCount, black, gPlayFont);
-	
+
 	MenuScreenBG.render(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 	gEndScreenTitle.render(200, 50);
 	gEndScreenPlayAgain.render(100, 340);
@@ -409,13 +407,13 @@ void endScreen() {
 	while (SDL_PollEvent(&event))
 	{
 		if (event.type == SDL_QUIT) {
-			
+
 			quit = true;
 		}
-		
-		
+
+
 		if (event.type == SDL_KEYDOWN) {
-			if (event.key.keysym.sym != SDLK_DELETE){
+			if (event.key.keysym.sym != SDLK_DELETE) {
 				Mix_PlayChannel(-1, gSFXHole, 0);
 				level = 0;
 				state = 1;
@@ -429,7 +427,7 @@ void endScreen() {
 
 
 	}
-	
+
 
 	return;
 }
@@ -454,7 +452,7 @@ void game()
 	else if (state == 1) {
 		transitionScreen();
 	}
-	else if (state==2)
+	else if (state == 2)
 	{
 		graphics();
 		update();
@@ -490,7 +488,7 @@ void close()
 
 int main(int argc, char* args[])
 {
-	
+
 	//Start up SDL and create window
 	if (!init())
 	{
