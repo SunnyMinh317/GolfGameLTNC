@@ -15,6 +15,7 @@ public:
 	static const int BALL_HEIGHT = 20;
 	static const int BUTTON_WIDTH = 50;
 	static const int BUTTON_HEIGHT = 50;
+	static const int MAX_VEL = 800;
 
 	//Maximum axis velocity of the Ball
 	static const int BALL_VEL = 640;
@@ -46,6 +47,9 @@ public:
 	float getBallCenterX();
 
 	float getBallCenterY();
+
+	float getPercent();
+
 	SDL_Rect get_Rect();
 	SDL_Rect closest(SDL_Rect ball, SDL_Rect tiles[], int n);
 
@@ -56,7 +60,7 @@ public:
 	friend class Hole;
 private:
 	bool spoint,pressed=false;
-	float degree;
+	float degree, percent;
 	float InitX, InitY;
 	float mPosX, mPosY;
 	float mVelX, mVelY;

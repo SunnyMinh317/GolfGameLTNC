@@ -38,6 +38,7 @@ LTexture MenuScreenBG;
 LTexture gEndScreenTitle;
 LTexture gEndScreenPlayAgain;
 LTexture gLevelNumber;
+LTexture gPowerBar_overlay, gPowerBar_background, gPowerBar_power;
 
 #include "headers/Ball.h"
 #include "headers/Hole.h"
@@ -146,6 +147,9 @@ bool loadMedia()
 	gPlayFont = TTF_OpenFont("fonts/pixelFont.ttf", 20);
 	gTitleFont = TTF_OpenFont("fonts/pixelFont.ttf", 40);
 	bool success = true;
+	gPowerBar_overlay.addRenderer(gRenderer);
+	gPowerBar_background.addRenderer(gRenderer);
+	gPowerBar_power.addRenderer(gRenderer);
 	gMouseTexture.addRenderer(gRenderer);
 	gPointTexture.addRenderer(gRenderer);
 	gBallTexture.addRenderer(gRenderer);
@@ -159,6 +163,18 @@ bool loadMedia()
 	gEndScreenTitle.addRenderer(gRenderer);
 	gEndScreenPlayAgain.addRenderer(gRenderer);
 	gLevelNumber.addRenderer(gRenderer);
+	if (!gPowerBar_overlay.loadFromFile("pictures/powermeter_overlay.png")) {
+		printf("Failed to load Power bar texture!\n");
+		success = false;
+	}
+	if (!gPowerBar_background.loadFromFile("pictures/powermeter_background.png")) {
+		printf("Failed to load Power bar texture!\n");
+		success = false;
+	}
+	if (!gPowerBar_power.loadFromFile("pictures/powermeter_power.png")) {
+		printf("Failed to load Power bar texture!\n");
+		success = false;
+	}
 	if (!gMouseTexture.loadFromFile("pictures/tileset/68304.png")) {
 		printf("Failed to load Mouse texture!\n");
 		success = false;
@@ -304,10 +320,32 @@ void graphics()
 
 	if (ball.Inside()) gGlowTexture.render(ball.getPosX() - (ball.BUTTON_WIDTH / 2 - 10), ball.getPosY() - (ball.BUTTON_HEIGHT / 2 - 10), ball.BUTTON_WIDTH, ball.BUTTON_HEIGHT);
 
-	if (ball.getPoint()) gPointTexture.render(ball.getPosX() - (15 / 2 - 10), ball.getPosY() - (53 / 2 - 10), 15, 53, ball.getDegree());
+	if (ball.getPoint()) {
+		gPointTexture.render(ball.getPosX() - (15 / 2 - 10), ball.getPosY() - (53 / 2 - 10), 15, 53, ball.getDegree());
+		if (ball.getPosX() <= SCREEN_WIDTH / 2 && ball.getPosY() <= SCREEN_HEIGHT / 2) {
+			gPowerBar_background.render(ball.getPosX() + 40, ball.getPosY() + 40, 12, 48);
+			gPowerBar_power.render(ball.getPosX() + 43, ball.getPosY() + 43+ 42 * (1 - ball.getPercent()), 6, 42*ball.getPercent());
+			gPowerBar_overlay.render(ball.getPosX() + 40, ball.getPosY() + 40, 12, 48);
+		}
+		else if (ball.getPosX() < SCREEN_WIDTH / 2 && ball.getPosY() > SCREEN_HEIGHT / 2) {
+			gPowerBar_background.render(ball.getPosX() + 40, ball.getPosY() - 40, 12, 48);
+			gPowerBar_power.render(ball.getPosX() + 43, ball.getPosY() - 37 + 42 * (1 - ball.getPercent()), 6, 42*ball.getPercent());
+			gPowerBar_overlay.render(ball.getPosX() + 40, ball.getPosY() - 40, 12, 48);
+		}
+		else if (ball.getPosX() > SCREEN_WIDTH / 2 && ball.getPosY() < SCREEN_HEIGHT / 2) {
+			gPowerBar_background.render(ball.getPosX() - 40, ball.getPosY() + 40, 12, 48);
+			gPowerBar_power.render(ball.getPosX() - 37, ball.getPosY() + 43 + 42 *(1- ball.getPercent()), 6, 42*ball.getPercent());
+			gPowerBar_overlay.render(ball.getPosX() - 40, ball.getPosY() + 40, 12, 48);
+		}
+		else if (ball.getPosX() > SCREEN_WIDTH / 2 && ball.getPosY() > SCREEN_HEIGHT / 2) {
+			gPowerBar_background.render(ball.getPosX() - 40, ball.getPosY() - 40, 12, 48);
+			gPowerBar_power.render(ball.getPosX() - 37, ball.getPosY() - 37 + 42 * (1 - ball.getPercent()), 6, 42*ball.getPercent());
+			gPowerBar_overlay.render(ball.getPosX() - 40, ball.getPosY() - 40, 12, 48);
+		}
+	}
+
 
 	gBallTexture.render(ball.getPosX(), ball.getPosY(), ball.BALL_WIDTH, ball.BALL_HEIGHT);
-
 	//gHitCount.render(100, 100);
 	renderHitCount();
 

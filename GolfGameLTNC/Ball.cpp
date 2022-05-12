@@ -53,6 +53,10 @@ float Ball::getBallCenterY() {
 	return mPosY + BALL_HEIGHT / 2;
 }
 
+float Ball::getPercent() {
+	return percent;
+}
+
 SDL_Rect Ball::get_Rect() {
 	return mBall;
 }
@@ -101,6 +105,14 @@ void Ball::handleEvent(SDL_Event& e)
 		if (e.type == SDL_MOUSEMOTION && pressed==true) {
 			spoint = true;
 			degree = SDL_atan2(-e.button.y + InitY, -e.button.x + InitX) * (180 / 3.1415) + 90;
+			float x = 4 * (-e.button.x + InitX);
+			float y = 4 * (-e.button.y + InitY);
+			if (SDL_sqrt(x * x + y * y) > MAX_VEL) {
+				percent = 1;
+			}
+			else {
+				percent = SDL_sqrt(x * x + y * y) / MAX_VEL;
+			}
 		}
 		if (e.type == SDL_MOUSEBUTTONUP && pressed==true)
 		{
@@ -112,7 +124,6 @@ void Ball::handleEvent(SDL_Event& e)
 
 			mVelX = 4 * (-e.button.x + InitX);
 			mVelY = 4 * (-e.button.y + InitY);
-
 			std::cout << "Hole: " << getHoleX() << " " << getHoleY() << std::endl;
 			std::cout << "Ball: " << getPosX() << " " << getPosY() << std::endl;
 		}
@@ -139,6 +150,10 @@ void Ball::move(float timeStep, SDL_Rect wall[], int n)
 {
 	mBall = { (int)mPosX,(int)mPosY,BALL_WIDTH,BALL_WIDTH };
 	if (abs(mVelX) > 0.5 && abs(mVelY) > 0.5) {
+		if (SDL_sqrt(mVelX * mVelX + mVelY * mVelY) > MAX_VEL) {
+			mVelX=mVelX/abs(mVelX) * MAX_VEL * abs(mVelX / SDL_sqrt(mVelX * mVelX + mVelY * mVelY));
+			mVelY=mVelY/abs(mVelY) * MAX_VEL * abs(mVelY / SDL_sqrt(mVelX * mVelX + mVelY * mVelY));
+		}
 		float ax = friction * abs(mVelX / SDL_sqrt(mVelX * mVelX + mVelY * mVelY));
 		float ay = friction * abs(mVelY / SDL_sqrt(mVelX * mVelX + mVelY * mVelY));
 		
