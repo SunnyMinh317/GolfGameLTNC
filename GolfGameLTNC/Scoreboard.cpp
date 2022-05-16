@@ -1,9 +1,10 @@
 #include"headers\Scoreboard.h"
 
 
-void Scores::nextScore(Scores** head, int data) {
+void Scores::nextScore(Scores** head, int data, std::string name) {
 	Scores* p = new Scores();
 	p->data = data;
+	p->name = name;
 	p->next = NULL;
 
 	if (*head == NULL) {
@@ -18,20 +19,22 @@ void Scores::nextScore(Scores** head, int data) {
 
 void Scores::topscores(Scores** head) {
 	int sc,i=0;
+	std::string scn;
 	std::string s = "headers/high.txt";
 	std::ifstream infile;
 	infile.open(s.c_str());
-	while (infile >> sc && i<5) {
-		nextScore(head, sc);
+	while (infile >> sc && infile >> scn && i<5) {
+		nextScore(head, sc, scn);
 		i++;
 	}
 	infile.close();
 }
 
-void Scores::insertsort(Scores** head, int data) {
+void Scores::insertsort(Scores** head, int data, std::string name) {
 	Scores* p = new Scores();
 
 	p->data = data;
+	p->name = name;
 	// since this will be the last Scores so it will point to NULL
 	p->next = NULL;
 
@@ -58,15 +61,26 @@ void Scores::insertsort(Scores** head, int data) {
 	temp->next = p;
 }
 
-int Scores::getScore(int n) {
+Scores* Scores::getScore(int n) {
 	Scores* head = this;
-	int i = 0, ans=-1;
+	int i = 0;
+	Scores* ans = head;
 	while (head != NULL && i <=n) {
-		ans = head->data;
+		ans = head;
 		head = head->next;
 		i++;
 	}
 	return ans;
+}
+
+int Scores::getdata() {
+	if (this == NULL) return -1;
+	return data;
+}
+
+std::string Scores::getname() {
+	if (this == NULL) return "";
+	return name;
 }
 
 int Scores::count(){
@@ -94,7 +108,7 @@ void Scores::save() {
 	std::ofstream outfile;
 	outfile.open(s.c_str());
 	while (p!=NULL) {
-		outfile << p->data << std::endl;
+		outfile << p->data <<" "<< p->name<< std::endl;
 		p = p->next;
 	}
 	outfile.close();

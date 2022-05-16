@@ -33,6 +33,8 @@ LTexture gGlowTexture;
 LTexture gPointTexture;
 LTexture gTitleMenu;
 LTexture gPlayMenu;
+LTexture Entername;
+LTexture Playername;
 LTexture gHitCount;
 LTexture MenuScreenBG;
 LTexture gEndScreenTitle;
@@ -52,6 +54,7 @@ int level = 0;
 int n = 0, add = 0;
 bool quit = true;
 Scores* scores;
+std::string name="";
 Mouse mouse;
 Ball ball;
 Hole hole;
@@ -159,6 +162,8 @@ bool loadMedia()
 	MenuScreenBG.addRenderer(gRenderer);
 	gPlayMenu.addRenderer(gRenderer);
 	gTitleMenu.addRenderer(gRenderer);
+	Entername.addRenderer(gRenderer);
+	Playername.addRenderer(gRenderer);
 	gHitCount.addRenderer(gRenderer);
 	gEndScreenTitle.addRenderer(gRenderer);
 	gEndScreenPlayAgain.addRenderer(gRenderer);
@@ -217,6 +222,8 @@ bool loadMedia()
 		gPlayMenu.loadFromRenderedText("PRESS ANY KEY TO PLAY!", black, gPlayFont);
 		gEndScreenTitle.loadFromRenderedText("YOU WON!", black, gTitleFont);
 		gEndScreenPlayAgain.loadFromRenderedText("PRESS ANY KEY TO PLAY AGAIN!", black, gPlayFont);
+		Entername.loadFromRenderedText("ENTER YOUR NAME", black, gPlayFont);
+		Playername.loadFromRenderedText(name.c_str(), black, gPlayFont);
 
 
 	}
@@ -358,6 +365,8 @@ void graphics()
 }
 
 void titleScreen() {
+	SDL_StartTextInput();
+	bool renderText = true;
 	while (SDL_PollEvent(&event))
 	{
 		if (event.type == SDL_QUIT) {
@@ -366,12 +375,59 @@ void titleScreen() {
 		MenuScreenBG.render(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 		gTitleMenu.render(140, 150);
 		gPlayMenu.render(145, 320);
-		SDL_RenderPresent(gRenderer);
+		Entername.render(150, 245);
+		Playername.render(150, 270);
 		if (event.type == SDL_KEYDOWN) {
-			Mix_PlayChannel(-1, gSFXHole, 0);
-			state++;
+			if (event.key.keysym.sym == SDLK_BACKSPACE && name.length() > 0)
+			{
+				//lop off character
+				name.pop_back();
+				renderText = true;
+			}
+			//Handle copy
+			else if (event.key.keysym.sym == SDLK_c && SDL_GetModState() & KMOD_CTRL)
+			{
+				SDL_SetClipboardText(name.c_str());
+			}
+			//Handle paste
+			else if (event.key.keysym.sym == SDLK_v && SDL_GetModState() & KMOD_CTRL)
+			{
+				name = SDL_GetClipboardText();
+				renderText = true;
+			}
+			else if (event.key.keysym.sym == SDLK_KP_ENTER && name!="") {
+				Mix_PlayChannel(-1, gSFXHole, 0);
+				state++;
+			}
+		}
+		else if (event.type == SDL_TEXTINPUT)
+		{
+			//Not copy or pasting
+			if (!(SDL_GetModState() & KMOD_CTRL && (event.text.text[0] == 'c' || event.text.text[0] == 'C' || event.text.text[0] == 'v' || event.text.text[0] == 'V')))
+			{
+				//Append character
+				name += event.text.text;
+				renderText = true;
+			}
 		}
 	}
+	if (renderText)
+	{
+		//Text is not empty
+		if (name != "")
+		{
+			//Render new text
+			Playername.loadFromRenderedText(name.substr(0,7).c_str(), black, gPlayFont);
+		}
+		//Text is empty
+		else
+		{
+			//Render space texture
+			Playername.loadFromRenderedText(" ", black, gPlayFont);
+		}
+	}
+	SDL_RenderPresent(gRenderer);
+	SDL_StopTextInput();
 	return;
 }
 
@@ -403,19 +459,19 @@ void transitionScreen() {
 
 void highScore() {
 	scores->topscores(&scores);
-	if (add == 0) scores->insertsort(&scores, ball.getHitCount());
+	if (add == 0) scores->insertsort(&scores, ball.getHitCount(), name);
 	scores->save();
-	int board[5];
+	Scores* board[5];
 	for (int i = 0; i < 5; i++)
-		if (scores->getScore(i) != -1)
+		if (scores->getScore(i)->getdata() != -1)
 			board[i] = scores->getScore(i);
 	if (scores->count() > 0) {
 		for (int i = 0; i < scores->count() && i < 5; i++) {
 			TTF_CloseFont(gPlayFont);
 			gPlayFont = TTF_OpenFont("fonts/pixelFont.ttf", 25);
-			std::string stringHitCount = std::to_string(1 + i) + ". . . . . . . ." + std::to_string(board[i]);
+			std::string stringHitCount = board[i]->getname().substr(0,3) + ". . . . . . . ." + std::to_string(board[i]->getdata());
 			gHitCount.loadFromRenderedText(stringHitCount, black, gPlayFont);
-			gHitCount.render(230, 160 + i * 30);
+			gHitCount.render(210, 160 + i * 30);
 		}
 	}
 	else {
@@ -454,8 +510,9 @@ void endScreen() {
 			if (event.key.keysym.sym != SDLK_DELETE) {
 				Mix_PlayChannel(-1, gSFXHole, 0);
 				level = 0;
-				state = 1;
+				state = 0;
 				add = 0;
+				name = "";
 				ball.resetcount();
 			}
 			else if (event.key.keysym.sym == SDLK_DELETE) {
@@ -471,7 +528,6 @@ void endScreen() {
 }
 
 void renderHitCount() {
-	//TTF_Font* gTitleFont = TTF_OpenFont("fonts/pixelFont.ttf", 40);
 	TTF_CloseFont(gPlayFont);
 	gPlayFont = TTF_OpenFont("fonts/pixelFont.ttf", 20);
 	std::string stringHitCount = "HIT COUNT: " + std::to_string(ball.getHitCount());
