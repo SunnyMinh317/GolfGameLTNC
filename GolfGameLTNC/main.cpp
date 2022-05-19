@@ -21,6 +21,7 @@ Mix_Music* gSFXBGMusic = NULL;
 Mix_Chunk* gSFXPressPlay = NULL;
 Mix_Chunk* gSFXHole = NULL;
 Mix_Chunk* gSFXLevelUp = NULL;
+Mix_Chunk* gSFXPlayerName = NULL;
 
 LTexture gMouseTexture;
 LTexture gTileTexture;
@@ -65,6 +66,7 @@ SDL_Color white = { 0xFF,0xFF,0xFF };
 
 TTF_Font* gPlayFont = TTF_OpenFont("fonts/pixelFont.ttf", 20);
 TTF_Font* gTitleFont = TTF_OpenFont("fonts/pixelFont.ttf", 40);
+TTF_Font* gHighScoresFont = TTF_OpenFont("fonts/name.ttf", 30);
 
 bool init();
 bool loadMedia();
@@ -225,6 +227,7 @@ bool loadMedia()
 	gSFXBGMusic = Mix_LoadMUS("resources/music/8bitBGMWav.wav");
 	gSFXHole = Mix_LoadWAV("resources/music/InHole.wav");
 	gSFXLevelUp = Mix_LoadWAV("resources/music/levelUp.wav");
+	gSFXPlayerName = Mix_LoadWAV("resources/music/TextSFX.mp3");
 
 	return success;
 }
@@ -391,6 +394,7 @@ void titleScreen() {
 			if (event.key.keysym.sym == SDLK_BACKSPACE && name.length() > 0)
 			{
 				name.pop_back();
+				Mix_PlayChannel(-1, gSFXPlayerName, 0);
 				renderText = true;
 			}
 			else if (event.key.keysym.sym == SDLK_c && SDL_GetModState() & KMOD_CTRL)
@@ -417,16 +421,19 @@ void titleScreen() {
 			if (!(SDL_GetModState() & KMOD_CTRL && (event.text.text[0] == 'c' || event.text.text[0] == 'C' || event.text.text[0] == 'v' || event.text.text[0] == 'V')))
 			{
 				name += event.text.text;
+				Mix_PlayChannel(-1, gSFXPlayerName, 0);
 				renderText = true;
 			}
 		}
 	}
 	if (renderText)
 	{
+		
 		//Text is not empty
 		if (name != "")
 		{
 			//Render new text
+			
 			Playername.loadFromRenderedText(name.substr(0, 12).c_str(), black, gPlayFont);
 		}
 		//Text is empty
@@ -453,7 +460,7 @@ void transitionScreen() {
 	std::cout << "LEVEL = " << std::to_string(level + 1) << std::endl;
 	gLevelNumber.loadFromRenderedText("LEVEL " + std::to_string(level + 1), black, gTitleFont);
 	MenuScreenBG.render(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
-	gLevelNumber.render(SCREEN_HEIGHT / 2, SCREEN_WIDTH / 2);
+	gLevelNumber.render(SCREEN_HEIGHT / 2 - 30, SCREEN_WIDTH / 2);
 	SDL_RenderPresent(gRenderer);
 	SDL_Delay(1000);
 	state++;
@@ -469,21 +476,21 @@ void highScore() {
 			board[i] = scores->getScore(i);
 	if (scores->count() > 0) {
 		for (int i = 0; i < scores->count() && i < 5; i++) {
-			TTF_CloseFont(gPlayFont);
-			gPlayFont = TTF_OpenFont("fonts/pixelFont.ttf", 25);
+			TTF_CloseFont(gHighScoresFont);
+			gHighScoresFont = TTF_OpenFont("fonts/name.ttf", 30);
 			std::string stringHitCount = board[i]->getname().substr(0, 3);
-			gHitCount.loadFromRenderedText(stringHitCount, black, gPlayFont);
-			gHitCount.render(180, 160 + i * 30);
+			gHitCount.loadFromRenderedText(stringHitCount, black, gHighScoresFont);
+			gHitCount.render(225, 160 + i * 30);
 			stringHitCount = ". . . . . . . . . " + std::to_string(board[i]->getdata());
-			gHitCount.loadFromRenderedText(stringHitCount, black, gPlayFont);
-			gHitCount.render(260, 160 + i * 30);
+			gHitCount.loadFromRenderedText(stringHitCount, black, gHighScoresFont);
+			gHitCount.render(280, 160 + i * 30);
 		}
 	}
 	else {
-		TTF_CloseFont(gPlayFont);
-		gPlayFont = TTF_OpenFont("fonts/pixelFont.ttf", 25);
+		TTF_CloseFont(gHighScoresFont);
+		gHighScoresFont = TTF_OpenFont("fonts/name.ttf", 40);
 		std::string stringHitCount = "NO RECORDS";
-		gHitCount.loadFromRenderedText(stringHitCount, black, gPlayFont);
+		gHitCount.loadFromRenderedText(stringHitCount, black, gHighScoresFont);
 		gHitCount.render(220, 160);
 	}
 	scores->deletelist(&scores);
@@ -588,7 +595,7 @@ int main(int argc, char* args[])
 		else
 		{
 			Mix_PlayMusic(gSFXBGMusic, -1);
-			Mix_VolumeMusic(20);
+			Mix_VolumeMusic(15);
 			quit = false;
 			loadLevel(level);
 			//While application is running
