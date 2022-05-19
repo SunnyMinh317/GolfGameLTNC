@@ -75,7 +75,6 @@ bool Ball::win() {
 		mPosY = getHoleY() + 5;
 		std::cout << "You won!";
 		win = true;
-		//level++ reset pos de het loop
 	}
 	return win;
 }
@@ -157,14 +156,31 @@ SDL_Rect Ball::closest(SDL_Rect ball, std::vector<SDL_Rect> tiles) {
 void Ball::move(float timeStep, std::vector<SDL_Rect> wall, std::vector<SDL_Rect> sand, std::vector<SDL_Rect> water)
 {
 	mBall = { (int)mPosX,(int)mPosY,BALL_WIDTH,BALL_WIDTH };
-	if (abs(mVelX) > 0.5 && abs(mVelY) > 0.5) {
+	if (abs(mVelX) > 0.75 && abs(mVelY) > 0.75) {
 		if (SDL_sqrt(mVelX * mVelX + mVelY * mVelY) > MAX_VEL) {
 			mVelX=mVelX/abs(mVelX) * MAX_VEL * abs(mVelX / SDL_sqrt(mVelX * mVelX + mVelY * mVelY));
 			mVelY=mVelY/abs(mVelY) * MAX_VEL * abs(mVelY / SDL_sqrt(mVelX * mVelX + mVelY * mVelY));
 		}
 		float ax = friction * abs(mVelX / SDL_sqrt(mVelX * mVelX + mVelY * mVelY));
 		float ay = friction * abs(mVelY / SDL_sqrt(mVelX * mVelX + mVelY * mVelY));
-		
+		//Sand behaviour
+		if (sand.size() != 0)
+		{
+			SDL_Rect clos = closest(mBall, sand);
+
+
+			if (SDL_HasIntersection(&clos, &mBall))
+			{
+				checkSand = true;
+				ax = 5 * friction * abs(mVelX / SDL_sqrt(mVelX * mVelX + mVelY * mVelY));
+				ay = 5 * friction * abs(mVelY / SDL_sqrt(mVelX * mVelX + mVelY * mVelY));
+			}
+			else {
+				checkSand = false;
+				ax = friction * abs(mVelX / SDL_sqrt(mVelX * mVelX + mVelY * mVelY));
+				ay = friction * abs(mVelY / SDL_sqrt(mVelX * mVelX + mVelY * mVelY));
+			}
+		}
 
 		//Move the Ball left or right
 		mPosX += mVelX * timeStep;
@@ -231,47 +247,6 @@ void Ball::move(float timeStep, std::vector<SDL_Rect> wall, std::vector<SDL_Rect
 			}
 		}
 
-		//Sand behaviour
-		if (sand.size() != 0)
-		{
-			SDL_Rect clos = closest(mBall, sand);
-
-
-			if (SDL_HasIntersection(&clos, &mBall))
-			{
-				checkSand = true;
-				if (abs(mVelX) > 1 && abs(mVelY) > 1) {
-					mBall.x = mPosX + mVelX * timeStep;
-					mBall.y = mPosY;
-
-					if (mVelX > 0) {
-						mVelX -= 5 * ax * timeStep;
-					}
-					else if (mVelX < 0) {
-						mVelX += 5 * ax * timeStep;
-					}
-
-					mBall.x = mPosX;
-					mBall.y = mPosY + mVelY * timeStep;
-
-					if (mVelY > 0) {
-						mVelY -= 5 * ay * timeStep;
-					}
-					else if (mVelY < 0) {
-						mVelY += 5 * ay * timeStep;
-					}
-				}
-				else {
-					mVelX = 0;
-					mVelY = 0;
-				}
-
-			}
-			else {
-				checkSand = false;
-			}
-		}
-
 		//Water behaviour
 		if (water.size() != 0)
 		{
@@ -298,7 +273,6 @@ void Ball::move(float timeStep, std::vector<SDL_Rect> wall, std::vector<SDL_Rect
 		mVelX = 0;
 		mVelY = 0;
 	}
-
 }
 
 int Ball::getHitCount() {

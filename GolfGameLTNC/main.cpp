@@ -75,10 +75,8 @@ void game();
 void graphics();
 void titleScreen();
 void transitionScreen();
-void renderTransition();
 void endScreen();
 void highScore();
-void renderHitCount();
 
 bool init()
 {
@@ -142,11 +140,11 @@ bool init()
 
 bool loadMedia()
 {
+	bool success = true;
 	TTF_CloseFont(gPlayFont);
 	TTF_CloseFont(gTitleFont);
 	gPlayFont = TTF_OpenFont("fonts/pixelFont.ttf", 20);
 	gTitleFont = TTF_OpenFont("fonts/pixelFont.ttf", 40);
-	bool success = true;
 	gPowerBar_overlay.addRenderer(gRenderer);
 	gPowerBar_background.addRenderer(gRenderer);
 	gPowerBar_power.addRenderer(gRenderer);
@@ -216,7 +214,7 @@ bool loadMedia()
 	else {
 
 		gTitleMenu.loadFromRenderedText("MINI GOLF A++", black, gTitleFont);
-		gPlayMenu.loadFromRenderedText("PRESS ANY KEY TO PLAY!", black, gPlayFont);
+		gPlayMenu.loadFromRenderedText("PRESS ENTER TO PLAY!", black, gPlayFont);
 		gEndScreenTitle.loadFromRenderedText("YOU WON!", black, gTitleFont);
 		gEndScreenPlayAgain.loadFromRenderedText("PRESS ANY KEY TO PLAY AGAIN!", black, gPlayFont);
 		Entername.loadFromRenderedText("ENTER YOUR NAME", black, gPlayFont);
@@ -303,8 +301,6 @@ void update()
 			quit = true;
 		}
 		ball.handleEvent(event);
-
-
 	}
 	mouse.handleEvent();
 	float timeStep = stepTimer.getTicks() / 1000.f;
@@ -334,7 +330,7 @@ void graphics()
 		gTileTexture.render(tileSet2[i]->getBox().x, tileSet2[i]->getBox().y, &gTileClips[tileSet2[i]->getType()]);
 	}
 
-	gHoleTexture.render((int)ball.getHoleX(), (int)ball.getHoleY(), hole.HOLE_WIDTH, hole.HOLE_HEIGHT);
+	gHoleTexture.render((int)ball.getHoleX(), (int)ball.getHoleY(), ball.HOLE_WIDTH, ball.HOLE_HEIGHT);
 
 	if (ball.Inside()) gGlowTexture.render(ball.getPosX() - (ball.BUTTON_WIDTH / 2 - 10), ball.getPosY() - (ball.BUTTON_HEIGHT / 2 - 10), ball.BUTTON_WIDTH, ball.BUTTON_HEIGHT);
 
@@ -364,15 +360,16 @@ void graphics()
 
 
 	gBallTexture.render(ball.getPosX(), ball.getPosY(), ball.BALL_WIDTH, ball.BALL_HEIGHT);
-	//gHitCount.render(100, 100);
-	renderHitCount();
+
+	TTF_CloseFont(gPlayFont);
+	gPlayFont = TTF_OpenFont("fonts/pixelFont.ttf", 20);
+	std::string stringHitCount = "HIT COUNT: " + std::to_string(ball.getHitCount());
+	gHitCount.loadFromRenderedText(stringHitCount, black, gPlayFont);
+	gHitCount.render(10, 10);
 
 	gMouseTexture.render(mouse.getPosX(), mouse.getPosY(), mouse.MOUSE_WIDTH, mouse.MOUSE_HEIGHT);
 
-	//Update screen
 	SDL_RenderPresent(gRenderer);
-
-
 }
 
 void titleScreen() {
@@ -383,40 +380,42 @@ void titleScreen() {
 		if (event.type == SDL_QUIT) {
 			quit = true;
 		}
+
 		MenuScreenBG.render(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 		gTitleMenu.render(140, 150);
-		gPlayMenu.render(145, 320);
-		Entername.render(150, 245);
-		Playername.render(150, 270);
+		gPlayMenu.render(170, 340);
+		Entername.render(200, 230);
+		Playername.render(320 - name.substr(0, 12).length() * 8, 270);
+
 		if (event.type == SDL_KEYDOWN) {
 			if (event.key.keysym.sym == SDLK_BACKSPACE && name.length() > 0)
 			{
-				//lop off character
 				name.pop_back();
 				renderText = true;
 			}
-			//Handle copy
 			else if (event.key.keysym.sym == SDLK_c && SDL_GetModState() & KMOD_CTRL)
 			{
 				SDL_SetClipboardText(name.c_str());
 			}
-			//Handle paste
 			else if (event.key.keysym.sym == SDLK_v && SDL_GetModState() & KMOD_CTRL)
 			{
 				name = SDL_GetClipboardText();
 				renderText = true;
 			}
-			else if (event.key.keysym.sym == SDLK_KP_ENTER && name!="") {
-				Mix_PlayChannel(-1, gSFXHole, 0);
-				state++;
+			else if (event.key.keysym.sym == 13 && name != "") {
+				for (int i = 0; i < name.length(); i++) {
+					if (name[i] != ' ') {
+						Mix_PlayChannel(-1, gSFXHole, 0);
+						state++;
+						break;
+					}
+				}
 			}
 		}
 		else if (event.type == SDL_TEXTINPUT)
 		{
-			//Not copy or pasting
 			if (!(SDL_GetModState() & KMOD_CTRL && (event.text.text[0] == 'c' || event.text.text[0] == 'C' || event.text.text[0] == 'v' || event.text.text[0] == 'V')))
 			{
-				//Append character
 				name += event.text.text;
 				renderText = true;
 			}
@@ -428,7 +427,7 @@ void titleScreen() {
 		if (name != "")
 		{
 			//Render new text
-			Playername.loadFromRenderedText(name.substr(0,7).c_str(), black, gPlayFont);
+			Playername.loadFromRenderedText(name.substr(0, 12).c_str(), black, gPlayFont);
 		}
 		//Text is empty
 		else
@@ -442,28 +441,20 @@ void titleScreen() {
 	return;
 }
 
-void renderTransition() {
-	Mix_PlayChannel(-1, gSFXLevelUp, 0);
-	SDL_Color black = { 0,0,0 };
-	TTF_Font* gTitleFont = TTF_OpenFont("fonts/pixelFont.ttf", 40);
-	std::string levelNum = std::to_string(level + 1);
-	std::cout << "LEVEL = " << levelNum << std::endl;
-	std::string levelNumRender = "LEVEL " + levelNum;
-	gLevelNumber.loadFromRenderedText(levelNumRender, black, gTitleFont);
-	gLevelNumber.render(SCREEN_HEIGHT / 2, SCREEN_WIDTH / 2);
-	SDL_RenderPresent(gRenderer);
-}
-
 void transitionScreen() {
 	while (SDL_PollEvent(&event))
 	{
 		if (event.type == SDL_QUIT) {
 			quit = true;
 		}
-
 	}
+	Mix_PlayChannel(-1, gSFXLevelUp, 0);
+	TTF_Font* gTitleFont = TTF_OpenFont("fonts/pixelFont.ttf", 40);
+	std::cout << "LEVEL = " << std::to_string(level + 1) << std::endl;
+	gLevelNumber.loadFromRenderedText("LEVEL " + std::to_string(level + 1), black, gTitleFont);
 	MenuScreenBG.render(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
-	renderTransition();
+	gLevelNumber.render(SCREEN_HEIGHT / 2, SCREEN_WIDTH / 2);
+	SDL_RenderPresent(gRenderer);
 	SDL_Delay(1000);
 	state++;
 }
@@ -480,9 +471,12 @@ void highScore() {
 		for (int i = 0; i < scores->count() && i < 5; i++) {
 			TTF_CloseFont(gPlayFont);
 			gPlayFont = TTF_OpenFont("fonts/pixelFont.ttf", 25);
-			std::string stringHitCount = board[i]->getname().substr(0,3) + ". . . . . . . ." + std::to_string(board[i]->getdata());
+			std::string stringHitCount = board[i]->getname().substr(0, 3);
 			gHitCount.loadFromRenderedText(stringHitCount, black, gPlayFont);
-			gHitCount.render(210, 160 + i * 30);
+			gHitCount.render(180, 160 + i * 30);
+			stringHitCount = ". . . . . . . . . " + std::to_string(board[i]->getdata());
+			gHitCount.loadFromRenderedText(stringHitCount, black, gPlayFont);
+			gHitCount.render(260, 160 + i * 30);
 		}
 	}
 	else {
@@ -501,7 +495,6 @@ void endScreen() {
 	gPlayFont = TTF_OpenFont("fonts/pixelFont.ttf", 25);
 	std::string stringHitCount = "FINAL SCORE: " + std::to_string(ball.getHitCount());
 	gHitCount.loadFromRenderedText(stringHitCount, black, gPlayFont);
-
 	MenuScreenBG.render(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 	gEndScreenTitle.render(200, 50);
 	gEndScreenPlayAgain.render(100, 340);
@@ -515,8 +508,6 @@ void endScreen() {
 
 			quit = true;
 		}
-
-
 		if (event.type == SDL_KEYDOWN) {
 			if (event.key.keysym.sym != SDLK_DELETE) {
 				Mix_PlayChannel(-1, gSFXHole, 0);
@@ -530,20 +521,8 @@ void endScreen() {
 				scores->save(); // reset scoreboard
 			}
 		}
-
-
 	}
-
-
 	return;
-}
-
-void renderHitCount() {
-	TTF_CloseFont(gPlayFont);
-	gPlayFont = TTF_OpenFont("fonts/pixelFont.ttf", 20);
-	std::string stringHitCount = "HIT COUNT: " + std::to_string(ball.getHitCount());
-	gHitCount.loadFromRenderedText(stringHitCount, black, gPlayFont);
-	gHitCount.render(10, 10);
 }
 
 
