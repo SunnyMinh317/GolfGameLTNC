@@ -1,0 +1,74 @@
+﻿  Ball.cpp
+C:\Users\HP\Desktop\CodingProject\GolfGameLTNC\Ball.cpp(107,18): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\HP\Desktop\CodingProject\GolfGameLTNC\Ball.cpp(107,15): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\HP\Desktop\CodingProject\GolfGameLTNC\Ball.cpp(111,82): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+C:\Users\HP\Desktop\CodingProject\GolfGameLTNC\Ball.cpp(118,39): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+C:\Users\HP\Desktop\CodingProject\GolfGameLTNC\Ball.cpp(143,12): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+C:\Users\HP\Desktop\CodingProject\GolfGameLTNC\Ball.cpp(145,12): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
+C:\Users\HP\Desktop\CodingProject\GolfGameLTNC\Ball.cpp(146,12): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
+C:\Users\HP\Desktop\CodingProject\GolfGameLTNC\Ball.cpp(147,12): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
+C:\Users\HP\Desktop\CodingProject\GolfGameLTNC\Ball.cpp(148,12): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
+C:\Users\HP\Desktop\CodingProject\GolfGameLTNC\Ball.cpp(150,18): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+C:\Users\HP\Desktop\CodingProject\GolfGameLTNC\Ball.cpp(162,37): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+C:\Users\HP\Desktop\CodingProject\GolfGameLTNC\Ball.cpp(163,37): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+C:\Users\HP\Desktop\CodingProject\GolfGameLTNC\Ball.cpp(165,12): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+C:\Users\HP\Desktop\CodingProject\GolfGameLTNC\Ball.cpp(166,12): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+C:\Users\HP\Desktop\CodingProject\GolfGameLTNC\Ball.cpp(217,20): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
+C:\Users\HP\Desktop\CodingProject\GolfGameLTNC\Ball.cpp(218,14): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
+C:\Users\HP\Desktop\CodingProject\GolfGameLTNC\Ball.cpp(225,14): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
+C:\Users\HP\Desktop\CodingProject\GolfGameLTNC\Ball.cpp(226,20): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
+C:\Users\HP\Desktop\CodingProject\GolfGameLTNC\Ball.cpp(244,22): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
+C:\Users\HP\Desktop\CodingProject\GolfGameLTNC\Ball.cpp(245,16): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
+C:\Users\HP\Desktop\CodingProject\GolfGameLTNC\Ball.cpp(254,16): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
+C:\Users\HP\Desktop\CodingProject\GolfGameLTNC\Ball.cpp(255,22): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
+C:\Users\HP\Desktop\CodingProject\GolfGameLTNC\Ball.cpp(280,20): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
+C:\Users\HP\Desktop\CodingProject\GolfGameLTNC\Ball.cpp(281,14): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
+C:\Users\HP\Desktop\CodingProject\GolfGameLTNC\Ball.cpp(283,14): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
+C:\Users\HP\Desktop\CodingProject\GolfGameLTNC\Ball.cpp(284,20): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
+C:\Users\HP\Desktop\CodingProject\GolfGameLTNC\Ball.cpp(292,20): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+C:\Users\HP\Desktop\CodingProject\GolfGameLTNC\Ball.cpp(293,20): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+  Hole.cpp
+C:\Users\HP\Desktop\CodingProject\GolfGameLTNC\Hole.cpp(13,13): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+C:\Users\HP\Desktop\CodingProject\GolfGameLTNC\Hole.cpp(14,13): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+  main.cpp
+C:\Users\HP\Desktop\CodingProject\GolfGameLTNC\main.cpp(339,103): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\HP\Desktop\CodingProject\GolfGameLTNC\main.cpp(339,56): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\HP\Desktop\CodingProject\GolfGameLTNC\main.cpp(342,71): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\HP\Desktop\CodingProject\GolfGameLTNC\main.cpp(342,39): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\HP\Desktop\CodingProject\GolfGameLTNC\main.cpp(344,68): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\HP\Desktop\CodingProject\GolfGameLTNC\main.cpp(344,47): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\HP\Desktop\CodingProject\GolfGameLTNC\main.cpp(345,104): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\HP\Desktop\CodingProject\GolfGameLTNC\main.cpp(345,67): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\HP\Desktop\CodingProject\GolfGameLTNC\main.cpp(345,42): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\HP\Desktop\CodingProject\GolfGameLTNC\main.cpp(346,65): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\HP\Desktop\CodingProject\GolfGameLTNC\main.cpp(346,44): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\HP\Desktop\CodingProject\GolfGameLTNC\main.cpp(349,68): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\HP\Desktop\CodingProject\GolfGameLTNC\main.cpp(349,47): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\HP\Desktop\CodingProject\GolfGameLTNC\main.cpp(350,105): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\HP\Desktop\CodingProject\GolfGameLTNC\main.cpp(350,68): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\HP\Desktop\CodingProject\GolfGameLTNC\main.cpp(350,42): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\HP\Desktop\CodingProject\GolfGameLTNC\main.cpp(351,65): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\HP\Desktop\CodingProject\GolfGameLTNC\main.cpp(351,44): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\HP\Desktop\CodingProject\GolfGameLTNC\main.cpp(354,68): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\HP\Desktop\CodingProject\GolfGameLTNC\main.cpp(354,47): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\HP\Desktop\CodingProject\GolfGameLTNC\main.cpp(355,103): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\HP\Desktop\CodingProject\GolfGameLTNC\main.cpp(355,68): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\HP\Desktop\CodingProject\GolfGameLTNC\main.cpp(355,42): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\HP\Desktop\CodingProject\GolfGameLTNC\main.cpp(356,65): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\HP\Desktop\CodingProject\GolfGameLTNC\main.cpp(356,44): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\HP\Desktop\CodingProject\GolfGameLTNC\main.cpp(359,68): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\HP\Desktop\CodingProject\GolfGameLTNC\main.cpp(359,47): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\HP\Desktop\CodingProject\GolfGameLTNC\main.cpp(360,105): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\HP\Desktop\CodingProject\GolfGameLTNC\main.cpp(360,68): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\HP\Desktop\CodingProject\GolfGameLTNC\main.cpp(360,42): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\HP\Desktop\CodingProject\GolfGameLTNC\main.cpp(361,65): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\HP\Desktop\CodingProject\GolfGameLTNC\main.cpp(361,44): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\HP\Desktop\CodingProject\GolfGameLTNC\main.cpp(366,50): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\HP\Desktop\CodingProject\GolfGameLTNC\main.cpp(366,34): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+  Mouse.cpp
+  Scoreboard.cpp
+  Texture.cpp
+  Tile.cpp
+  Timer.cpp
+  Generating Code...
+  GolfGameLTNC.vcxproj -> C:\Users\HP\Desktop\CodingProject\GolfGameLTNC\x64\Debug\GolfGameLTNC.exe

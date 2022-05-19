@@ -37,6 +37,10 @@ bool Ball::getPoint() {
 	return (pressed && spoint);
 }
 
+bool Ball::inSand() {
+	return checkSand;
+}
+
 float Ball::getPosX() {
 	return mPosX;
 }
@@ -117,8 +121,12 @@ void Ball::handleEvent(SDL_Event& e)
 		if (e.type == SDL_MOUSEBUTTONUP && pressed==true)
 		{
 			hitCount++;
-			Mix_Chunk* gSFXGolfHit = Mix_LoadWAV("music/golfPut.wav");
+			Mix_Chunk* gSFXGolfHit = Mix_LoadWAV("resources/music/golfPut.wav");
 			Mix_PlayChannel(-1, gSFXGolfHit, 0);
+			if (Ball::inSand()) {
+				Mix_Chunk* gSFXGolfHit = Mix_LoadWAV("resources/music/ballSand.wav");
+				Mix_PlayChannel(-1, gSFXGolfHit, 0);
+			}
 			pressed = false;
 			std::cout << getHoleCenterX() << " " << getHoleCenterY() << std::endl;
 
@@ -130,10 +138,10 @@ void Ball::handleEvent(SDL_Event& e)
 	}
 }
 
-SDL_Rect Ball::closest(SDL_Rect ball, SDL_Rect tiles[], int n) {
+SDL_Rect Ball::closest(SDL_Rect ball, std::vector<SDL_Rect> tiles) {
 	SDL_Rect ans = tiles[0];
 	float min = SDL_sqrt(((ans.x + ans.w / 2) - (ball.x + ball.w / 2)) * ((ans.x + ans.w / 2) - (ball.x + ball.w / 2)) + ((ans.y + ans.h / 2) - (ball.y + ball.h / 2)) * ((ans.y + ans.h / 2) - (ball.y + ball.h / 2)));
-	for (int i = 1; i < n; i++) {
+	for (int i = 0; i < tiles.size(); i++) {
 		float x1 = tiles[i].x + tiles[i].w / 2;
 		float x2 = ball.x + ball.w / 2;
 		float y1 = tiles[i].y + tiles[i].h / 2;
@@ -146,7 +154,7 @@ SDL_Rect Ball::closest(SDL_Rect ball, SDL_Rect tiles[], int n) {
 	return ans;
 }
 
-void Ball::move(float timeStep, SDL_Rect wall[], int n)
+void Ball::move(float timeStep, std::vector<SDL_Rect> wall, std::vector<SDL_Rect> sand, std::vector<SDL_Rect> water)
 {
 	mBall = { (int)mPosX,(int)mPosY,BALL_WIDTH,BALL_WIDTH };
 	if (abs(mVelX) > 0.5 && abs(mVelY) > 0.5) {
@@ -201,10 +209,10 @@ void Ball::move(float timeStep, SDL_Rect wall[], int n)
 		else if (mVelY < 0) {
 			mVelY += ay * timeStep;
 		}
-
-		if (n != 0)
+		//Bounce behaviour
+		if (wall.size() != 0)
 		{
-			SDL_Rect clos = closest(mBall, wall, n);
+			SDL_Rect clos = closest(mBall, wall);
 
 			mBall.x = mPosX + mVelX * timeStep;
 			mBall.y = mPosY;
@@ -220,6 +228,69 @@ void Ball::move(float timeStep, SDL_Rect wall[], int n)
 			if (SDL_HasIntersection(&clos, &mBall))
 			{
 				mVelY = -mVelY;
+			}
+		}
+
+		//Sand behaviour
+		if (sand.size() != 0)
+		{
+			SDL_Rect clos = closest(mBall, sand);
+
+
+			if (SDL_HasIntersection(&clos, &mBall))
+			{
+				checkSand = true;
+				if (abs(mVelX) > 1 && abs(mVelY) > 1) {
+					mBall.x = mPosX + mVelX * timeStep;
+					mBall.y = mPosY;
+
+					if (mVelX > 0) {
+						mVelX -= 5 * ax * timeStep;
+					}
+					else if (mVelX < 0) {
+						mVelX += 5 * ax * timeStep;
+					}
+
+					mBall.x = mPosX;
+					mBall.y = mPosY + mVelY * timeStep;
+
+					if (mVelY > 0) {
+						mVelY -= 5 * ay * timeStep;
+					}
+					else if (mVelY < 0) {
+						mVelY += 5 * ay * timeStep;
+					}
+				}
+				else {
+					mVelX = 0;
+					mVelY = 0;
+				}
+
+			}
+			else {
+				checkSand = false;
+			}
+		}
+
+		//Water behaviour
+		if (water.size() != 0)
+		{
+			SDL_Rect clos = closest(mBall, water);
+
+			mBall.x = mPosX + mVelX * timeStep;
+			mBall.y = mPosY;
+
+			mBall.x = mPosX;
+			mBall.y = mPosY + mVelY * timeStep;
+			if (SDL_HasIntersection(&clos, &mBall))
+			{
+				mVelX = 0;
+				mVelY = 0;
+				mPosX = 10;
+				mPosY = 10;
+				SDL_Delay(500);
+				mPosX = clos.x + 100;
+				mPosY = clos.y + 100;
 			}
 		}
 	}

@@ -1,6 +1,7 @@
 #pragma once
 #include <iostream>
 #include <iomanip>
+#include <vector>
 #include <SDL_mixer.h>
 #include "Hole.h"
 
@@ -27,7 +28,7 @@ public:
 	void handleEvent(SDL_Event& e);
 
 	//Moves the Ball
-	void move(float timeStep, SDL_Rect wall[], int n);
+	void move(float timeStep, std::vector<SDL_Rect>, std::vector<SDL_Rect>, std::vector<SDL_Rect>);
 	bool Inside();
 
 	void setInitPos(float x, float y);
@@ -40,6 +41,8 @@ public:
 
 	bool getPoint();
 
+	bool inSand();
+
 	float getPosX();
 
 	float getPosY();
@@ -51,7 +54,8 @@ public:
 	float getPercent();
 
 	SDL_Rect get_Rect();
-	SDL_Rect closest(SDL_Rect ball, SDL_Rect tiles[], int n);
+
+	SDL_Rect closest(SDL_Rect ball, std::vector<SDL_Rect> tiles);
 
 	bool win();
 
@@ -65,6 +69,7 @@ private:
 	float mPosX, mPosY;
 	float mVelX, mVelY;
 	float friction = 500;
+	bool checkSand = false;
 	int hitCount = 0;
 	SDL_Rect mBall;
 };

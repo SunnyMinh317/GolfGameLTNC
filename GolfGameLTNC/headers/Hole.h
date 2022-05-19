@@ -7,30 +7,18 @@ public:
 	const int HOLE_HEIGHT = 30;
 
 	//Initializes the variables
+	//Initializes the variables
 	Hole();
+	void setNewHolePos(int, int);
+	float getHoleX();
+	float getHoleY();
+	float getHoleCenterX();
+	float getHoleCenterY();
 
-	float getHoleX() {
-		return holePosX;
-	}
-
-	float getHoleY() {
-		return holePosY;
-	}
-
-	float getHoleCenterX() {
-		return holePosX + HOLE_WIDTH / 2;
-	}
-
-	float getHoleCenterY() {
-		return holePosY + HOLE_HEIGHT / 2;
-	}
-
-	SDL_Rect get_Rect() {
-		return mHole;
-	}
+	SDL_Rect get_Rect();
 private:
 	friend class Ball;
 	SDL_Rect mHole;
-	float holePosX;
-	float holePosY;
+	float holePosX = 50;
+	float holePosY = 50;
 };

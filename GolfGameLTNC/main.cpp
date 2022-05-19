@@ -1,8 +1,5 @@
-﻿/*This source code copyrighted by Lazy Foo' Productions (2004-2022)
-and may not be redistributed without written permission.*/
-
-//Using SDL, SDL_image, standard IO, and, strings
-#include <SDL.h>
+﻿#include <SDL.h>
+#include <vector>
 #include <SDL_image.h>
 #include <SDL_ttf.h>
 #include <SDL_mixer.h>
@@ -51,7 +48,7 @@ LTexture gPowerBar_overlay, gPowerBar_background, gPowerBar_power;
 SDL_Rect gTileClips[TOTAL_TILE_SPRITES];
 
 int level = 0;
-int n = 0, add = 0;
+int add = 0;
 bool quit = true;
 Scores* scores;
 std::string name="";
@@ -61,7 +58,7 @@ Hole hole;
 SDL_Event event;
 LTimer stepTimer;
 Tile* tileSet[TOTAL_TILES], * tileSet1[TOTAL_TILES], * tileSet2[TOTAL_TILES], tile;
-SDL_Rect bounce[TOTAL_TILES];
+std::vector<SDL_Rect> bounce, sand, water;
 int state = 0; //0 = titleScreen, 1 = transition, 2 = game, 3 = endScreen
 SDL_Color black = { 0,0,0 };
 SDL_Color white = { 0xFF,0xFF,0xFF };
@@ -168,47 +165,47 @@ bool loadMedia()
 	gEndScreenTitle.addRenderer(gRenderer);
 	gEndScreenPlayAgain.addRenderer(gRenderer);
 	gLevelNumber.addRenderer(gRenderer);
-	if (!gPowerBar_overlay.loadFromFile("pictures/powermeter_overlay.png")) {
+	if (!gPowerBar_overlay.loadFromFile("resources/pictures/powermeter_overlay.png")) {
 		printf("Failed to load Power bar texture!\n");
 		success = false;
 	}
-	if (!gPowerBar_background.loadFromFile("pictures/powermeter_background.png")) {
+	if (!gPowerBar_background.loadFromFile("resources/pictures/powermeter_background.png")) {
 		printf("Failed to load Power bar texture!\n");
 		success = false;
 	}
-	if (!gPowerBar_power.loadFromFile("pictures/powermeter_power.png")) {
+	if (!gPowerBar_power.loadFromFile("resources/pictures/powermeter_power.png")) {
 		printf("Failed to load Power bar texture!\n");
 		success = false;
 	}
-	if (!gMouseTexture.loadFromFile("pictures/tileset/68304.png")) {
+	if (!gMouseTexture.loadFromFile("resources/pictures/tileset/68304.png")) {
 		printf("Failed to load Mouse texture!\n");
 		success = false;
 	}
-	if (!gPointTexture.loadFromFile("pictures/point.png"))
+	if (!gPointTexture.loadFromFile("resources/pictures/point.png"))
 	{
 		printf("Failed to load Point texture!\n");
 		success = false;
 	}
-	if (!gBallTexture.loadFromFile("pictures/tileset/Golfball.png"))
+	if (!gBallTexture.loadFromFile("resources/pictures/tileset/Golfball.png"))
 	{
 		printf("Failed to load Ball texture!\n");
 		success = false;
 	}
-	if (!gGlowTexture.loadFromFile("pictures/GolfGlow.png")) {
+	if (!gGlowTexture.loadFromFile("resources/pictures/GolfGlow.png")) {
 		printf("Failed to load Glow texture!\n");
 		success = false;
 	}
-	if (!gHoleTexture.loadFromFile("pictures/hole2.png"))
+	if (!gHoleTexture.loadFromFile("resources/pictures/hole2.png"))
 	{
 		printf("Failed to load Hole texture!\n");
 		success = false;
 	}
-	if (!gTileTexture.loadFromFile("pictures/tileset/tilesetx.png"))
+	if (!gTileTexture.loadFromFile("resources/pictures/tileset/tilesetx.png"))
 	{
 		printf("Failed to load Hole texture!\n");
 		success = false;
 	}
-	if (!MenuScreenBG.loadFromFile("pictures/menuScreenBG.jpg"))
+	if (!MenuScreenBG.loadFromFile("resources/pictures/menuScreenBG.jpg"))
 	{
 		printf("Failed to load menu screen BG!\n");
 		success = false;
@@ -227,9 +224,9 @@ bool loadMedia()
 
 
 	}
-	gSFXBGMusic = Mix_LoadMUS("music/8bitBGMWav.wav");
-	gSFXHole = Mix_LoadWAV("music/InHole.wav");
-	gSFXLevelUp = Mix_LoadWAV("music/levelUp.wav");
+	gSFXBGMusic = Mix_LoadMUS("resources/music/8bitBGMWav.wav");
+	gSFXHole = Mix_LoadWAV("resources/music/InHole.wav");
+	gSFXLevelUp = Mix_LoadWAV("resources/music/levelUp.wav");
 
 	return success;
 }
@@ -238,7 +235,9 @@ bool loadMedia()
 
 void loadLevel(int level)
 {
-	n = 0;
+	bounce.clear();
+	sand.clear();
+	water.clear();
 	std::cout << level << "level" << std::endl;
 	if (level > 1)
 	{
@@ -250,38 +249,50 @@ void loadLevel(int level)
 	{
 	case 0:
 		ball.setNewPos(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2);
-		tile.setTiles(gTileClips, tileSet, "headers/layer_background.csv");
-		tile.setTiles(gTileClips, tileSet1, "headers/layer_terrain.csv");
-		tile.setTiles(gTileClips, tileSet2, "headers/layer_obstacle.csv");
-		for (int i = 0; i < TOTAL_TILES; ++i)
-		{
-			//If the tile is a wall type tile
-			if ((tileSet2[i]->getType() >= TILE_GREENROCK1) && (tileSet2[i]->getType() <= TILE_GREENWOOD) || (tileSet2[i]->getType() >= TILE_SANDROCK1) && (tileSet2[i]->getType() <= TILE_SANDWOOD) || (tileSet2[i]->getType() >= TILE_WATERROCK1) && (tileSet2[i]->getType() <= TILE_WATERWOOD))
-			{
-				bounce[n] = tileSet2[i]->getBox();
-				n++;
-			}
-		}
+		ball.setNewHolePos(200, 200);
+		tile.setTiles(gTileClips, tileSet, "resources/map/layer_background.csv");
+		tile.setTiles(gTileClips, tileSet1, "resources/map/layer_terrain.csv");
+		tile.setTiles(gTileClips, tileSet2, "resources/map/layer_obstacle.csv");
 		break;
 	case 1:
-		ball.setNewPos(SCREEN_WIDTH / 2 + 200, SCREEN_HEIGHT / 2 + 200);
-		tile.setTiles(gTileClips, tileSet, "headers/layer_background.csv");
-		tile.setTiles(gTileClips, tileSet1, "headers/layer_terrain.csv");
-		tile.setTiles(gTileClips, tileSet2, "headers/layer_obstacle2.csv");
-		for (int i = 0; i < TOTAL_TILES; ++i)
-		{
-			//If the tile is a wall type tile
-			if ((tileSet2[i]->getType() >= TILE_GREENROCK1) && (tileSet2[i]->getType() <= TILE_GREENWOOD) || (tileSet2[i]->getType() >= TILE_SANDROCK1) && (tileSet2[i]->getType() <= TILE_SANDWOOD) || (tileSet2[i]->getType() >= TILE_WATERROCK1) && (tileSet2[i]->getType() <= TILE_WATERWOOD))
-			{
-				bounce[n] = tileSet2[i]->getBox();
-				n++;
-			}
-		}
+		ball.setNewPos(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2);
+		tile.setTiles(gTileClips, tileSet, "resources/map/layer_background.csv");
+		tile.setTiles(gTileClips, tileSet1, "resources/map/layer_terrain.csv");
+		tile.setTiles(gTileClips, tileSet2, "resources/map/layer_obstacle2.csv");
 		break;
 	}
+	for (int i = 0; i < TOTAL_TILES; ++i)
+	{
+		//If the tile is a wall type tile
+		if ((tileSet2[i]->getType() >= TILE_GREENROCK1) && (tileSet2[i]->getType() <= TILE_GREENWOOD) || (tileSet2[i]->getType() >= TILE_SANDROCK1) && (tileSet2[i]->getType() <= TILE_SANDWOOD) || (tileSet2[i]->getType() >= TILE_WATERROCK1) && (tileSet2[i]->getType() <= TILE_WATERWOOD))
+		{
+			bounce.push_back(tileSet2[i]->getBox());
+		}
+		//If the tile is a SAND type tile
+		if (tileSet1[i]->getType() == TILE_SANDMIDDLE)
+		{
+			SDL_Rect sandBox = tileSet1[i]->getBox();
+			sandBox.x -= TILE_WIDTH / 4;
+			sandBox.y -= TILE_WIDTH / 4;
+			sandBox.w += TILE_WIDTH / 2;
+			sandBox.h += TILE_WIDTH / 2;
 
+			sand.push_back(sandBox);
+		}
+		//If the tile is a WATER type tile
+		if (tileSet1[i]->getType() == TILE_WATERMIDDLE)
+		{
+			SDL_Rect waterBox = tileSet1[i]->getBox();
+			waterBox.x += TILE_WIDTH / 4;
+			waterBox.y += TILE_WIDTH / 4;
+			waterBox.w /= 2;
+			waterBox.h /= 2;
+			water.push_back(waterBox);
+		}
+	}
 
 }
+
 
 void update()
 {
@@ -297,7 +308,7 @@ void update()
 	}
 	mouse.handleEvent();
 	float timeStep = stepTimer.getTicks() / 1000.f;
-	ball.move(timeStep, bounce, n);
+	ball.move(timeStep, bounce, sand, water);
 	stepTimer.start();
 	if (ball.win()) {
 		Mix_PlayChannel(-1, gSFXHole, 0);
@@ -323,7 +334,7 @@ void graphics()
 		gTileTexture.render(tileSet2[i]->getBox().x, tileSet2[i]->getBox().y, &gTileClips[tileSet2[i]->getType()]);
 	}
 
-	gHoleTexture.render((int)hole.getHoleX(), (int)hole.getHoleY(), hole.HOLE_WIDTH, hole.HOLE_HEIGHT);
+	gHoleTexture.render((int)ball.getHoleX(), (int)ball.getHoleY(), hole.HOLE_WIDTH, hole.HOLE_HEIGHT);
 
 	if (ball.Inside()) gGlowTexture.render(ball.getPosX() - (ball.BUTTON_WIDTH / 2 - 10), ball.getPosY() - (ball.BUTTON_HEIGHT / 2 - 10), ball.BUTTON_WIDTH, ball.BUTTON_HEIGHT);
 
