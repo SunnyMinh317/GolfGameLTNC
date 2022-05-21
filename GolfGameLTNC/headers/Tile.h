@@ -96,7 +96,7 @@ public:
 
 	SDL_Rect* getpBox();
 
-	bool setTiles(SDL_Rect TileClips[],Tile* tiles[], std::string s);
+	bool setTiles(SDL_Rect TileClips[], Tile* tiles[], std::string s);
 
 private:
 	//Tile attributes

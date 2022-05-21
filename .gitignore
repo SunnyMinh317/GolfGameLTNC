@@ -17,6 +17,7 @@
 *.exe
 *.out
 *.app
+*.sln
 GameProject/x64/
 GameProject/SDL2_ttf-2.0.18/
 GameProject/SDL2_mixer-2.0.4/

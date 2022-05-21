@@ -1,4 +1,5 @@
-﻿#include <SDL.h>
+﻿#define SDL_MAIN_HANDLED
+#include <SDL.h>
 #include <vector>
 #include <SDL_image.h>
 #include <SDL_ttf.h>
@@ -52,13 +53,13 @@ int level = 0;
 int add = 0;
 bool quit = true;
 Scores* scores;
-std::string name="";
+std::string name = "";
 Mouse mouse;
 Ball ball;
 Hole hole;
 SDL_Event event;
 LTimer stepTimer;
-Tile* tileSet[TOTAL_TILES], * tileSet1[TOTAL_TILES], * tileSet2[TOTAL_TILES], tile;
+Tile* tileSet[TOTAL_TILES], * tileSet1[TOTAL_TILES], * tileSet2[TOTAL_TILES], * tileSet3[TOTAL_TILES], tile;
 std::vector<SDL_Rect> bounce, sand, water;
 int state = 0; //0 = titleScreen, 1 = transition, 2 = game, 3 = endScreen
 SDL_Color black = { 0,0,0 };
@@ -249,46 +250,45 @@ void loadLevel(int level)
 	switch (level)
 	{
 	case 0:
-		ball.setNewPos(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2);
-		ball.setNewHolePos(200, 200);
-		tile.setTiles(gTileClips, tileSet, "resources/map/layer_background.csv");
-		tile.setTiles(gTileClips, tileSet1, "resources/map/layer_terrain.csv");
-		tile.setTiles(gTileClips, tileSet2, "resources/map/layer_obstacle.csv");
+		ball.setNewPos(60, 240);
+		ball.setNewHolePos(113, 145);
+		tile.setTiles(gTileClips, tileSet, "resources/map/NewMap/GolfGame_TileLayer1.csv");
+		tile.setTiles(gTileClips, tileSet1, "resources/map/NewMap/GolfGame_Water.csv");
+		tile.setTiles(gTileClips, tileSet2, "resources/map/NewMap/GolfGame_Sand.csv");
+		tile.setTiles(gTileClips, tileSet3, "resources/map/NewMap/GolfGame_Collision.csv");
 		break;
 	case 1:
-		ball.setNewPos(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2);
-		tile.setTiles(gTileClips, tileSet, "resources/map/layer_background.csv");
-		tile.setTiles(gTileClips, tileSet1, "resources/map/layer_terrain.csv");
-		tile.setTiles(gTileClips, tileSet2, "resources/map/layer_obstacle2.csv");
+		ball.setNewPos(250, 450);
+		ball.setNewHolePos(360, 445);
+		tile.setTiles(gTileClips, tileSet, "resources/map/NewMap/GolfGameLVL2_TileLayer1.csv");
+		tile.setTiles(gTileClips, tileSet1, "resources/map/NewMap/GolfGameLVL2_Water.csv");
+		tile.setTiles(gTileClips, tileSet2, "resources/map/NewMap/GolfGameLVL2_Sand.csv");
+		tile.setTiles(gTileClips, tileSet3, "resources/map/NewMap/GolfGameLVL2_Collision.csv");
 		break;
 	}
 	for (int i = 0; i < TOTAL_TILES; ++i)
 	{
 		//If the tile is a wall type tile
-		if ((tileSet2[i]->getType() >= TILE_GREENROCK1) && (tileSet2[i]->getType() <= TILE_GREENWOOD) || (tileSet2[i]->getType() >= TILE_SANDROCK1) && (tileSet2[i]->getType() <= TILE_SANDWOOD) || (tileSet2[i]->getType() >= TILE_WATERROCK1) && (tileSet2[i]->getType() <= TILE_WATERWOOD))
+		if ((tileSet3[i]->getType() >= TILE_GREENROCK1) && (tileSet3[i]->getType() <= TILE_GREENWOOD) || (tileSet3[i]->getType() >= TILE_SANDROCK1) && (tileSet3[i]->getType() <= TILE_SANDWOOD) || (tileSet3[i]->getType() >= TILE_WATERROCK1) && (tileSet3[i]->getType() <= TILE_WATERWOOD))
 		{
-			bounce.push_back(tileSet2[i]->getBox());
+			bounce.push_back(tileSet3[i]->getBox());
+		}
+		//If the tile is a WATER type tile
+		if (tileSet1[i]->getType() == TILE_WATERMIDDLE)
+		{
+			SDL_Rect waterBox = tileSet1[i]->getBox();
+			water.push_back(waterBox);
 		}
 		//If the tile is a SAND type tile
-		if (tileSet1[i]->getType() == TILE_SANDMIDDLE)
+		if (tileSet2[i]->getType() == TILE_SANDMIDDLE)
 		{
-			SDL_Rect sandBox = tileSet1[i]->getBox();
+			SDL_Rect sandBox = tileSet2[i]->getBox();
 			sandBox.x -= TILE_WIDTH / 4;
 			sandBox.y -= TILE_WIDTH / 4;
 			sandBox.w += TILE_WIDTH / 2;
 			sandBox.h += TILE_WIDTH / 2;
 
 			sand.push_back(sandBox);
-		}
-		//If the tile is a WATER type tile
-		if (tileSet1[i]->getType() == TILE_WATERMIDDLE)
-		{
-			SDL_Rect waterBox = tileSet1[i]->getBox();
-			waterBox.x += TILE_WIDTH / 4;
-			waterBox.y += TILE_WIDTH / 4;
-			waterBox.w /= 2;
-			waterBox.h /= 2;
-			water.push_back(waterBox);
 		}
 	}
 
@@ -331,6 +331,7 @@ void graphics()
 		gTileTexture.render(tileSet[i]->getBox().x, tileSet[i]->getBox().y, &gTileClips[tileSet[i]->getType()]);
 		gTileTexture.render(tileSet1[i]->getBox().x, tileSet1[i]->getBox().y, &gTileClips[tileSet1[i]->getType()]);
 		gTileTexture.render(tileSet2[i]->getBox().x, tileSet2[i]->getBox().y, &gTileClips[tileSet2[i]->getType()]);
+		gTileTexture.render(tileSet3[i]->getBox().x, tileSet3[i]->getBox().y, &gTileClips[tileSet3[i]->getType()]);
 	}
 
 	gHoleTexture.render((int)ball.getHoleX(), (int)ball.getHoleY(), ball.HOLE_WIDTH, ball.HOLE_HEIGHT);
@@ -338,25 +339,25 @@ void graphics()
 	if (ball.Inside()) gGlowTexture.render(ball.getPosX() - (ball.BUTTON_WIDTH / 2 - 10), ball.getPosY() - (ball.BUTTON_HEIGHT / 2 - 10), ball.BUTTON_WIDTH, ball.BUTTON_HEIGHT);
 
 	if (ball.getPoint()) {
-		gPointTexture.render(ball.getPosX() - (15 / 2 - 10), ball.getPosY() - (53 / 2 - 10), 15, 53, ball.getDegree());
+		gPointTexture.render(ball.getPosX() - (15 / 2 - 10), ball.getPosY() - (90 / 2 - 10), 15, 90, ball.getDegree());
 		if (ball.getPosX() <= SCREEN_WIDTH / 2 && ball.getPosY() <= SCREEN_HEIGHT / 2) {
 			gPowerBar_background.render(ball.getPosX() + 40, ball.getPosY() + 40, 12, 48);
-			gPowerBar_power.render(ball.getPosX() + 43, ball.getPosY() + 43+ 42 * (1 - ball.getPercent()), 6, 42*ball.getPercent());
+			gPowerBar_power.render(ball.getPosX() + 43, ball.getPosY() + 43 + 42 * (1 - ball.getPercent()), 6, 42 * ball.getPercent());
 			gPowerBar_overlay.render(ball.getPosX() + 40, ball.getPosY() + 40, 12, 48);
 		}
 		else if (ball.getPosX() < SCREEN_WIDTH / 2 && ball.getPosY() > SCREEN_HEIGHT / 2) {
 			gPowerBar_background.render(ball.getPosX() + 40, ball.getPosY() - 40, 12, 48);
-			gPowerBar_power.render(ball.getPosX() + 43, ball.getPosY() - 37 + 42 * (1 - ball.getPercent()), 6, 42*ball.getPercent());
+			gPowerBar_power.render(ball.getPosX() + 43, ball.getPosY() - 37 + 42 * (1 - ball.getPercent()), 6, 42 * ball.getPercent());
 			gPowerBar_overlay.render(ball.getPosX() + 40, ball.getPosY() - 40, 12, 48);
 		}
 		else if (ball.getPosX() > SCREEN_WIDTH / 2 && ball.getPosY() < SCREEN_HEIGHT / 2) {
 			gPowerBar_background.render(ball.getPosX() - 40, ball.getPosY() + 40, 12, 48);
-			gPowerBar_power.render(ball.getPosX() - 37, ball.getPosY() + 43 + 42 *(1- ball.getPercent()), 6, 42*ball.getPercent());
+			gPowerBar_power.render(ball.getPosX() - 37, ball.getPosY() + 43 + 42 * (1 - ball.getPercent()), 6, 42 * ball.getPercent());
 			gPowerBar_overlay.render(ball.getPosX() - 40, ball.getPosY() + 40, 12, 48);
 		}
 		else if (ball.getPosX() > SCREEN_WIDTH / 2 && ball.getPosY() > SCREEN_HEIGHT / 2) {
 			gPowerBar_background.render(ball.getPosX() - 40, ball.getPosY() - 40, 12, 48);
-			gPowerBar_power.render(ball.getPosX() - 37, ball.getPosY() - 37 + 42 * (1 - ball.getPercent()), 6, 42*ball.getPercent());
+			gPowerBar_power.render(ball.getPosX() - 37, ball.getPosY() - 37 + 42 * (1 - ball.getPercent()), 6, 42 * ball.getPercent());
 			gPowerBar_overlay.render(ball.getPosX() - 40, ball.getPosY() - 40, 12, 48);
 		}
 	}
@@ -428,12 +429,12 @@ void titleScreen() {
 	}
 	if (renderText)
 	{
-		
+
 		//Text is not empty
 		if (name != "")
 		{
 			//Render new text
-			
+
 			Playername.loadFromRenderedText(name.substr(0, 12).c_str(), black, gPlayFont);
 		}
 		//Text is empty
@@ -478,7 +479,7 @@ void highScore() {
 		for (int i = 0; i < scores->count() && i < 5; i++) {
 			TTF_CloseFont(gHighScoresFont);
 			gHighScoresFont = TTF_OpenFont("fonts/name.ttf", 30);
-			std::string stringHitCount = board[i]->getname().substr(0, 3);
+			std::string stringHitCount = board[i]->getname().substr(0, 10);
 			gHitCount.loadFromRenderedText(stringHitCount, black, gHighScoresFont);
 			gHitCount.render(225, 160 + i * 30);
 			stringHitCount = ". . . . . . . . . " + std::to_string(board[i]->getdata());

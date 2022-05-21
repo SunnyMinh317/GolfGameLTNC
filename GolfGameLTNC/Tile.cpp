@@ -337,7 +337,7 @@ bool Tile::setTiles(SDL_Rect TileClips[], Tile* tiles[], std::string s)
 			TileClips[TILE_WATERBOTRIGHT].h = TILE_HEIGHT;
 
 			TileClips[TILE_WATERSUPTOPLEFT].x = 2 * 48;
-			TileClips[TILE_WATERSUPTOPLEFT].y = 2 * 48;
+			TileClips[TILE_WATERSUPTOPLEFT].y = 2 * 96;
 			TileClips[TILE_WATERSUPTOPLEFT].w = TILE_WIDTH;
 			TileClips[TILE_WATERSUPTOPLEFT].h = TILE_HEIGHT;
 
