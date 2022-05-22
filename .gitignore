@@ -7,7 +7,6 @@
 *.pch
 *.so
 *.dylib
-*.dll
 *.mod
 *.smod
 *.lai
@@ -18,12 +17,7 @@
 *.out
 *.app
 *.sln
-GameProject/x64/
-GameProject/SDL2_ttf-2.0.18/
-GameProject/SDL2_mixer-2.0.4/
-GameProject/SDL2_image-2.0.5/
-GameProject/SDL2-2.0.8/
-GameProject/SDL2-2.0.20/
-GameProject/.vs
+GolfGameLTNC/x64/
+GolfGameLTNC/.vs
 .vs/
 *.vcxproj
