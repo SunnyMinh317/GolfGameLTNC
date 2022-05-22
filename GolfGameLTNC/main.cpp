@@ -339,7 +339,7 @@ void graphics()
 	if (ball.Inside()) gGlowTexture.render(ball.getPosX() - (ball.BUTTON_WIDTH / 2 - 10), ball.getPosY() - (ball.BUTTON_HEIGHT / 2 - 10), ball.BUTTON_WIDTH, ball.BUTTON_HEIGHT);
 
 	if (ball.getPoint()) {
-		gPointTexture.render(ball.getPosX() - (15 / 2 - 10), ball.getPosY() - (90 / 2 - 10), 15, 90, ball.getDegree());
+		gPointTexture.render(ball.getPosX() - (15 / 2 - 10), ball.getPosY() - (53 / 2 - 10), 15, 53, ball.getDegree());
 		if (ball.getPosX() <= SCREEN_WIDTH / 2 && ball.getPosY() <= SCREEN_HEIGHT / 2) {
 			gPowerBar_background.render(ball.getPosX() + 40, ball.getPosY() + 40, 12, 48);
 			gPowerBar_power.render(ball.getPosX() + 43, ball.getPosY() + 43 + 42 * (1 - ball.getPercent()), 6, 42 * ball.getPercent());

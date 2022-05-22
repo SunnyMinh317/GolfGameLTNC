@@ -65,7 +65,7 @@ public:
 private:
 	bool spoint,pressed=false;
 	float degree, percent;
-	float InitX, InitY;
+	float InitX, InitY, InitBallX, InitBallY;
 	float mPosX, mPosY;
 	float mVelX, mVelY;
 	float friction = 500;

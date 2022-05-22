@@ -19,6 +19,8 @@ Ball::Ball()
 void Ball::setInitPos(float x, float y) {
 	InitX = x;
 	InitY = y;
+	InitBallX = mPosX;
+	InitBallY = mPosY;
 }
 
 void Ball::setNewPos(float x, float y) {
@@ -265,8 +267,8 @@ void Ball::move(float timeStep, std::vector<SDL_Rect> wall, std::vector<SDL_Rect
 				mPosX = 10;
 				mPosY = 10;
 				SDL_Delay(500);
-				mPosX = clos.x + 100;
-				mPosY = clos.y + 100;
+				mPosX = InitBallX;
+				mPosY = InitBallY;
 			}
 		}
 	}
