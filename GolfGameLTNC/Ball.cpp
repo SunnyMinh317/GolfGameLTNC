@@ -159,7 +159,7 @@ SDL_Rect Ball::closest(SDL_Rect ball, std::vector<SDL_Rect> tiles) {
 void Ball::move(float timeStep, std::vector<SDL_Rect> wall, std::vector<SDL_Rect> sand, std::vector<SDL_Rect> water)
 {
 	mBall = { (int)mPosX,(int)mPosY,BALL_WIDTH,BALL_WIDTH };
-	if (abs(mVelX) > 0.75 && abs(mVelY) > 0.75) {
+	if (abs(mVelX) > 0.5 && abs(mVelY) > 0.5) {
 		if (SDL_sqrt(mVelX * mVelX + mVelY * mVelY) > MAX_VEL) {
 			mVelX=mVelX/abs(mVelX) * MAX_VEL * abs(mVelX / SDL_sqrt(mVelX * mVelX + mVelY * mVelY));
 			mVelY=mVelY/abs(mVelY) * MAX_VEL * abs(mVelY / SDL_sqrt(mVelX * mVelX + mVelY * mVelY));
@@ -171,17 +171,18 @@ void Ball::move(float timeStep, std::vector<SDL_Rect> wall, std::vector<SDL_Rect
 		{
 			SDL_Rect clos = closest(mBall, sand);
 
-
-			if (SDL_HasIntersection(&clos, &mBall))
-			{
-				checkSand = true;
-				ax = 5 * friction * abs(mVelX / SDL_sqrt(mVelX * mVelX + mVelY * mVelY));
-				ay = 5 * friction * abs(mVelY / SDL_sqrt(mVelX * mVelX + mVelY * mVelY));
-			}
-			else {
-				checkSand = false;
-				ax = friction * abs(mVelX / SDL_sqrt(mVelX * mVelX + mVelY * mVelY));
-				ay = friction * abs(mVelY / SDL_sqrt(mVelX * mVelX + mVelY * mVelY));
+			if (abs(mVelX) > 0.5 && abs(mVelY) > 0.5) {
+				if (SDL_HasIntersection(&clos, &mBall))
+				{
+					checkSand = true;
+					ax = 5 * friction * abs(mVelX / SDL_sqrt(mVelX * mVelX + mVelY * mVelY));
+					ay = 5 * friction * abs(mVelY / SDL_sqrt(mVelX * mVelX + mVelY * mVelY));
+				}
+				else {
+					checkSand = false;
+					ax = friction * abs(mVelX / SDL_sqrt(mVelX * mVelX + mVelY * mVelY));
+					ay = friction * abs(mVelY / SDL_sqrt(mVelX * mVelX + mVelY * mVelY));
+				}
 			}
 		}
 
