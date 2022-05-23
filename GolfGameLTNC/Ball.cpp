@@ -171,7 +171,7 @@ void Ball::move(float timeStep, std::vector<SDL_Rect> wall, std::vector<SDL_Rect
 		{
 			SDL_Rect clos = closest(mBall, sand);
 
-			if (abs(mVelX) > 0.5 && abs(mVelY) > 0.5) {
+			if (abs(mVelX) > 1 && abs(mVelY) > 1) {
 				if (SDL_HasIntersection(&clos, &mBall))
 				{
 					checkSand = true;
