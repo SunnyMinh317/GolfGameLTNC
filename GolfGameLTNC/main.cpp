@@ -421,15 +421,18 @@ void titleScreen() {
 		{
 			if (!(SDL_GetModState() & KMOD_CTRL && (event.text.text[0] == 'c' || event.text.text[0] == 'C' || event.text.text[0] == 'v' || event.text.text[0] == 'V')))
 			{
-				name += event.text.text;
-				Mix_PlayChannel(-1, gSFXPlayerName, 0);
-				renderText = true;
+				if (event.text.text[0] != ' ') {
+					name += event.text.text;
+					Mix_PlayChannel(-1, gSFXPlayerName, 0);
+					renderText = true;
+				}
 			}
 		}
 	}
 	if (renderText)
 	{
-
+		TTF_CloseFont(gPlayFont);
+		gPlayFont = TTF_OpenFont("fonts/pixelFont.ttf", 20);
 		//Text is not empty
 		if (name != "")
 		{
@@ -469,7 +472,7 @@ void transitionScreen() {
 
 void highScore() {
 	scores->topscores(&scores);
-	if (add == 0) scores->insertsort(&scores, ball.getHitCount(), name);
+	if (add == 0) scores->insertsort(&scores, ball.getHitCount(), name.substr(0, 10));
 	scores->save();
 	Scores* board[5];
 	for (int i = 0; i < 5; i++)
@@ -481,7 +484,7 @@ void highScore() {
 			gHighScoresFont = TTF_OpenFont("fonts/name.ttf", 30);
 			std::string stringHitCount = board[i]->getname().substr(0, 10);
 			gHitCount.loadFromRenderedText(stringHitCount, black, gHighScoresFont);
-			gHitCount.render(225, 160 + i * 30);
+			gHitCount.render(270 - stringHitCount.length() * 14, 160 + i * 30);
 			stringHitCount = ". . . . . . . . . " + std::to_string(board[i]->getdata());
 			gHitCount.loadFromRenderedText(stringHitCount, black, gHighScoresFont);
 			gHitCount.render(280, 160 + i * 30);
